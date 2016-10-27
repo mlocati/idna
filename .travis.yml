@@ -15,7 +15,7 @@ matrix:
     - php: nightly
 
 script:
-  - bin/create-idnamap --debug test/assets/IdnaMappingTable.txt -
+  - bin/create-idnamap.sh --debug test/assets/IdnaMappingTable.txt -
   - phpunit
 
 notifications:
