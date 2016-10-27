@@ -1,0 +1,8 @@
+/bin/ export-ignore
+/src/IdnaMapping export-ignore
+/test/ export-ignore
+/examples/ export-ignore
+/.* export-ignore
+/*.yml export-ignore
+/*.xml export-ignore
+/README.md
