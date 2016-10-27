@@ -10,11 +10,20 @@ class IdnaMapTest extends PHPUnit_Framework_TestCase
 {
     public function allCodepointsAreCoveredProvider()
     {
-        return [
-            [CodepointConverterInterface::MIN_CODEPOINT, CodepointConverterInterface::MAX_CODEPOINT, true],
-            [CodepointConverterInterface::MIN_CODEPOINT, CodepointConverterInterface::MAX_CODEPOINT, false],
-        ];
+        $data = [];
+        $min = CodepointConverterInterface::MIN_CODEPOINT;
+        $max = CodepointConverterInterface::MAX_CODEPOINT;
+        $perStep = (int) max(10, ($max - $min + 1) / 1000);
+        foreach ([true, false] as $useSTD3ASCIIRules) {
+            for ($start = $min; $start <= $max; $start += $perStep) {
+                $end = min($max, $start + $perStep);
+                $data[] = [$start, $end, $useSTD3ASCIIRules];
+            }
+        }
+
+        return $data;
     }
+
     /**
      * @dataProvider allCodepointsAreCoveredProvider
      */
