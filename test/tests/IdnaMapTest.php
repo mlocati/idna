@@ -8,16 +8,33 @@ use MLocati\IDNA\CodepointConverter\CodepointConverterInterface;
 
 class IdnaMapTest extends PHPUnit_Framework_TestCase
 {
+    protected static $idnaMapError = 'Not initialized';
+
+    public static function setUpBeforeClass()
+    {
+        if (!class_exists(IdnaMap::class, true)) {
+            static::$idnaMapError = 'The IdnaMap can\'t be found (you may need to create it with the create-idnamap command)';
+        } elseif (!is_callable([IdnaMap::class, 'isDisallowed'])) {
+            static::$idnaMapError = 'The IdnaMap must be created with Disallowed support (--debug option of the create-idnamap command)';
+        } else {
+            static::$idnaMapError = null;
+        }
+    }
+
     public function allCodepointsAreCoveredProvider()
     {
         $data = [];
-        $min = CodepointConverterInterface::MIN_CODEPOINT;
-        $max = CodepointConverterInterface::MAX_CODEPOINT;
-        $perStep = (int) max(10, ($max - $min + 1) / 1000);
-        foreach ([true, false] as $useSTD3ASCIIRules) {
-            for ($start = $min; $start <= $max; $start += $perStep) {
-                $end = min($max, $start + $perStep);
-                $data[] = [$start, $end, $useSTD3ASCIIRules];
+        if (static::$idnaMapError !== null) {
+            $data[] = [0, 0, true];
+        } else {
+            $min = CodepointConverterInterface::MIN_CODEPOINT;
+            $max = CodepointConverterInterface::MAX_CODEPOINT;
+            $perStep = (int) max(10, ($max - $min + 1) / 1000);
+            foreach ([true, false] as $useSTD3ASCIIRules) {
+                for ($start = $min; $start <= $max; $start += $perStep) {
+                    $end = min($max, $start + $perStep);
+                    $data[] = [$start, $end, $useSTD3ASCIIRules];
+                }
             }
         }
 
@@ -29,11 +46,8 @@ class IdnaMapTest extends PHPUnit_Framework_TestCase
      */
     public function testAllCodepointsAreCoveredProvider($from, $to, $useSTD3ASCIIRules)
     {
-        if (!class_exists(IdnaMap::class, true)) {
-            $this->markTestSkipped('The IdnaMap can\'t be found (you may need to create it with the create-idnamap command)');
-        }
-        if (!is_callable([IdnaMap::class, 'isDisallowed'])) {
-            $this->markTestSkipped('The IdnaMap must be created with Disallowed support (--debug option of the create-idnamap command)');
+        if (static::$idnaMapError !== null) {
+            $this->markTestSkipped(static::$idnaMapError);
         }
         for ($codepoint = $from; $codepoint <= $to; ++$codepoint) {
             $covered = false;
