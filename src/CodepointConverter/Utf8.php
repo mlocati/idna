@@ -4,6 +4,7 @@ namespace MLocati\IDNA\CodepointConverter;
 
 use MLocati\IDNA\Exception\InvalidCharacter;
 use MLocati\IDNA\Exception\InvalidCodepoint;
+use MLocati\IDNA\Exception\InvalidString;
 
 /**
  * Convert an Unicode Code Point to/from an character in UTF-8 encoding.
@@ -126,14 +127,45 @@ class Utf8 extends CodepointConverter
         if ($string === '') {
             $result = [];
         } else {
-            $result = false;
+            $result = null;
             if (function_exists('preg_split')) {
-                $chars = @preg_split('//u', (string) $string, null, PREG_SPLIT_NO_EMPTY);
-                if ($chars !== false) {
-                    $result = $chars;
+                $characters = @preg_split('//u', (string) $string, null, PREG_SPLIT_NO_EMPTY);
+                if (is_array($characters) && implode('', $characters) === $string) {
+                    for ($i = 0, $n = count($characters), $ok = true; $ok && $i < $n; ++$i) {
+                        $character = $characters[$i];
+                        $b0 = ord($character[0]);
+                        switch (strlen($character)) {
+                            case 4:
+                                if ($b0 < 0xF0 || ord($character[1]) < 0x80 || ord($character[2]) < 0x80 || ord($character[3]) < 0x80) {
+                                    $ok = false;
+                                }
+                                break;
+                            case 3:
+                                if ($b0 < 0xE0 || $b0 >= 0xF0 || ord($character[1]) < 0x80 || ord($character[2]) < 0x80) {
+                                    $ok = false;
+                                }
+                                break;
+                            case 2:
+                                if ($b0 < 0x80 || $b0 >= 0xE0 || ord($character[1]) < 0x80) {
+                                    $ok = false;
+                                }
+                            case 1:
+                                if ($b0 >= 0x80) {
+                                    $ok = false;
+                                }
+                                break;
+                            default:
+                                $ok = false;
+                                break;
+                        }
+                    }
+                    if (!$ok) {
+                        throw new InvalidString($string);
+                    }
+                    $result = $characters;
                 }
             }
-            if ($result === false) {
+            if ($result === null) {
                 $result = parent::stringToCharacters($string);
             }
         }
