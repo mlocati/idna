@@ -37,25 +37,20 @@ class Utf8 extends CodepointConverter
      */
     protected function codepointToCharacterDo($codepoint)
     {
-        if ($codepoint <= 0x7F) {
-            $result = chr($codepoint);
-        } elseif ($codepoint <= 0xFFFF) {
-            // Basic Multilingual Plane: \u followed by four hexadecimal digits that encode the character's code point
-            $u = '"\u'.substr('000'.dechex($codepoint), -4).'"';
-            $result = @json_decode($u);
-            if (!is_string($result)) {
-                throw new InvalidCodepoint($codepoint);
+        $result = null;
+        if ($codepoint >= static::MIN_CODEPOINT) {
+            if ($codepoint <= 0x7F) {
+                $result = chr($codepoint);
+            } elseif ($codepoint <= 0x7FF) {
+                $result = chr(($codepoint >> 6) + 0xC0).chr(($codepoint & 0x3F) + 0x80);
+            } elseif ($codepoint <= 0xFFFF) {
+                $result = chr(($codepoint >> 12) + 0xE0).chr((($codepoint >> 6) & 0x3F) + 0x80).chr(($codepoint & 0x3F) + 0x80);
+            } elseif ($codepoint <= static::MAX_CODEPOINT) {
+                $result = chr(($codepoint >> 18) + 0xF0).chr((($codepoint >> 12) & 0x3F) + 0x80).chr((($codepoint >> 6) & 0x3F) + 0x80).chr(($codepoint & 0x3F) + 0x80);
             }
-        } else {
-            // Determine the UTF-16 surrogate pair
-            $delta = $codepoint - 0x10000;
-            $high = ($delta >> 10) | 0xD800;
-            $low = ($delta & 0x3FF) | 0xDC00;
-            $u = '"\u'.substr('000'.dechex($high), -4).'\u'.substr('000'.dechex($low), -4).'"';
-            $result = @json_decode($u);
-            if (!is_string($result)) {
-                throw new InvalidCodepoint($codepoint);
-            }
+        }
+        if ($result === null) {
+            throw new InvalidCodepoint($codepoint);
         }
 
         return $result;
@@ -68,42 +63,53 @@ class Utf8 extends CodepointConverter
      */
     protected function characterToCodepointDo($character)
     {
-        if (!isset($character[1])) {
-            $result = ord($character);
-            if ($result > 0x7F) {
-                throw new InvalidCharacter($character);
-            }
-        } elseif (isset($character[4])) {
+        $result = null;
+        switch (true) {
+            case isset($character[4]):
+                break;
+            case isset($character[3]):
+                $b0 = ord($character[0]);
+                if ($b0 >= 0xF0) {
+                    $b1 = ord($character[1]);
+                    $b2 = ord($character[2]);
+                    $b3 = ord($character[3]);
+                    if ($b1 >= 0x80 && $b2 >= 0x80 && $b3 >= 0x80) {
+                        $c = (($b0 - 0xF0) << 18) + (($b1 - 0x80) << 12) + (($b2 - 0x80) << 6) + ($b3 - 0x80);
+                        if ($c <= static::MAX_CODEPOINT) {
+                            $result = $c;
+                        }
+                    }
+                }
+                break;
+            case isset($character[2]):
+                $b0 = ord($character[0]);
+                if ($b0 >= 0xE0 && $b0 < 0xF0) {
+                    $b1 = ord($character[1]);
+                    $b2 = ord($character[2]);
+                    if ($b1 >= 0x80 && $b2 >= 0x80) {
+                        $result = (($b0 - 0xE0) << 12) + (($b1 - 0x80) << 6) + ($b2 - 0x80);
+                    }
+                }
+                break;
+            case isset($character[1]):
+                $b0 = ord($character[0]);
+                if ($b0 >= 0x80 && $b0 < 0xE0) {
+                    $b1 = ord($character[1]);
+                    if ($b1 >= 0x80) {
+                        $result = (($b0 - 0xC0) << 6) + ($b1 - 0x80);
+                    }
+                }
+                break;
+            case isset($character[0]):
+                $b0 = ord($character[0]);
+                if ($b0 < 0x80) {
+                    $result = $b0;
+                }
+                break;
+        }
+
+        if ($result === null) {
             throw new InvalidCharacter($character);
-        } else {
-            $result = null;
-            $s = @json_encode($character);
-            if ($s && isset($s[7]) && strpos($s, '"\u') === 0) {
-                $s = substr($s, 3, -1);
-                $chunks = [];
-                foreach (explode('\u', $s) as $i) {
-                    if (strlen($i) !== 4) {
-                        $chunks = null;
-                        break;
-                    }
-                    $chunks[] = hexdec($i);
-                }
-                if ($chunks !== null) {
-                    switch (count($chunks)) {
-                        case 1:
-                            $result = $chunks[0];
-                            break;
-                        case 2:
-                            if ($chunks[0] >= 0xD800 && $chunks[1] >= 0xDC00) {
-                                $result = 0x10000 + (($chunks[0] & ~0xD800) << 10) + ($chunks[1] & ~0xDC00);
-                            }
-                            break;
-                    }
-                }
-            }
-            if ($result === null) {
-                throw new InvalidCharacter($character);
-            }
         }
 
         return $result;
