@@ -149,6 +149,7 @@ class Utf8 extends CodepointConverter
                                 if ($b0 < 0x80 || $b0 >= 0xE0 || ord($character[1]) < 0x80) {
                                     $ok = false;
                                 }
+                                break;
                             case 1:
                                 if ($b0 >= 0x80) {
                                     $ok = false;
