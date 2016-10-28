@@ -2,8 +2,8 @@
 
 namespace MLocati\IDNA\IdnaMapping\Range;
 
-use MLocati\IDNA\IdnaMapping\TableRow;
 use Exception;
+use MLocati\IDNA\IdnaMapping\TableRow;
 
 /**
  * If the processing is transitional the code point is mapped, otherwise it is valid.

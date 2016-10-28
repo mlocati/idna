@@ -2,8 +2,8 @@
 
 namespace MLocati\IDNA\CodepointConverter;
 
-use MLocati\IDNA\Exception\InvalidCodepoint;
 use MLocati\IDNA\Exception\InvalidCharacter;
+use MLocati\IDNA\Exception\InvalidCodepoint;
 use MLocati\IDNA\Exception\InvalidString;
 
 /**
@@ -48,7 +48,7 @@ abstract class CodepointConverter implements CodepointConverterInterface
      */
     public function charactersToCodepoints(array $characters)
     {
-        $result = array();
+        $result = [];
         foreach ($characters as $character) {
             $result[] = $this->characterToCodepoint($character);
         }
@@ -89,7 +89,7 @@ abstract class CodepointConverter implements CodepointConverterInterface
      */
     public function codepointsToCharacters(array $codepoints)
     {
-        $result = array();
+        $result = [];
         foreach ($codepoints as $codepoint) {
             $result[] = $this->codepointToCharacter($codepoint);
         }

@@ -72,7 +72,7 @@ class DomainName
     {
         return $this->mappedName !== '';
     }
-    
+
     /**
      * @return string
      */

@@ -2,8 +2,8 @@
 
 namespace MLocati\IDNA\Tests;
 
-use PHPUnit_Framework_TestCase;
 use MLocati\IDNA\CodepointConverter\Utf8;
+use PHPUnit_Framework_TestCase;
 
 class CodepointConvertersTest extends PHPUnit_Framework_TestCase
 {

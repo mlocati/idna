@@ -2,14 +2,14 @@
 
 namespace MLocati\IDNA\IdnaMapping;
 
-use MLocati\IDNA\Exception\InvalidParameter;
 use Exception;
-use MLocati\IDNA\IdnaMapping\Range\Range;
-use MLocati\IDNA\IdnaMapping\Range\Mapped;
+use MLocati\IDNA\Exception\InvalidParameter;
+use MLocati\IDNA\IdnaMap;
 use MLocati\IDNA\IdnaMapping\Range\Deviation;
 use MLocati\IDNA\IdnaMapping\Range\Disallowed;
 use MLocati\IDNA\IdnaMapping\Range\Ignored;
-use MLocati\IDNA\IdnaMap;
+use MLocati\IDNA\IdnaMapping\Range\Mapped;
+use MLocati\IDNA\IdnaMapping\Range\Range;
 use MLocati\IDNA\IdnaMapping\Range\Valid;
 
 class Table
@@ -45,6 +45,7 @@ class Table
 
     /**
      * @param array $options {
+     *
      *     @var string $namespace The class namespace [default: 'MLocati\IDNA']
      *     @var string $className The class name [default: 'IdnaMap']
      *     @var bool $comments Include comments? [default: false]
@@ -454,7 +455,7 @@ class Table
                 return $a->range[0] - $b->range[0];
             }
         );
-        $merged = array();
+        $merged = [];
         $count = count($ranges);
         $previous = null;
         for ($index = 0; $index < $count; ++$index) {

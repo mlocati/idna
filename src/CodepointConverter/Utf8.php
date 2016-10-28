@@ -2,8 +2,8 @@
 
 namespace MLocati\IDNA\CodepointConverter;
 
-use MLocati\IDNA\Exception\InvalidCodepoint;
 use MLocati\IDNA\Exception\InvalidCharacter;
+use MLocati\IDNA\Exception\InvalidCodepoint;
 
 /**
  * Convert an Unicode Code Point to/from an character in UTF-8 encoding.

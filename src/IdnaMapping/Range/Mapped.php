@@ -2,8 +2,8 @@
 
 namespace MLocati\IDNA\IdnaMapping\Range;
 
-use MLocati\IDNA\IdnaMapping\TableRow;
 use Exception;
+use MLocati\IDNA\IdnaMapping\TableRow;
 
 /**
  * The code point is replaced in the string by the value for the mapping.

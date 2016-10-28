@@ -44,7 +44,6 @@ class IdnaMap
         return isset(static::$deviations[$codepoint]) ? static::$deviations[$codepoint] : null;
     }
 
-
     protected static $ignoredSingle = [
         173,
         847,

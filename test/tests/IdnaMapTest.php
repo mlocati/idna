@@ -2,9 +2,9 @@
 
 namespace MLocati\IDNA\Tests;
 
-use PHPUnit_Framework_TestCase;
-use MLocati\IDNA\IdnaMap;
 use MLocati\IDNA\CodepointConverter\CodepointConverterInterface;
+use MLocati\IDNA\IdnaMap;
+use PHPUnit_Framework_TestCase;
 
 class IdnaMapTest extends PHPUnit_Framework_TestCase
 {
