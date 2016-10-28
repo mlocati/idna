@@ -20,8 +20,8 @@ class InvalidCodepoint extends Exception
     public function __construct($codepoint)
     {
         $this->codepoint = $codepoint;
-        $str = @strval($codepoint);
         $message = 'Invalid code point';
+        $str = static::stringifyVariable($codepoint);
         if ($str !== '') {
             $message .= ': '.$str;
         }

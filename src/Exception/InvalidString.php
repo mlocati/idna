@@ -20,8 +20,8 @@ class InvalidString extends Exception
     public function __construct($string)
     {
         $this->string = $string;
-        $str = @strval($string);
         $message = 'Invalid string';
+        $str = static::stringifyVariable($string);
         if ($str !== '') {
             $message .= ': '.$str;
         }

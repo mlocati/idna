@@ -20,8 +20,8 @@ class InvalidCharacter extends Exception
     public function __construct($character)
     {
         $this->character = $character;
-        $str = @strval($character);
         $message = 'Invalid character';
+        $str = static::stringifyVariable($character);
         if ($str !== '') {
             $message .= ': '.$str;
         }
