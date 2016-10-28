@@ -18,6 +18,7 @@ class PunycodeTest extends PHPUnit_Framework_TestCase
     {
         static::$codepointConverter = new Utf8();
     }
+
     public function punycodeProvider()
     {
         $result = [];
