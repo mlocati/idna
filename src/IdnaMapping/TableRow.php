@@ -119,9 +119,9 @@ class TableRow
     /**
      * Parse a range (eg '0123' or '2345...BCDEF').
      *
-     * @param string   $text
-     * @param string   $separator
-     * @param bool     $mustBeSorted
+     * @param string $text
+     * @param string $separator
+     * @param bool $mustBeSorted
      * @param int|null $maxCount
      *
      * @throws Exception

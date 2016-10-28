@@ -22,7 +22,7 @@ class InvalidDomainNameCharacters extends Exception
     protected $characters;
 
     /**
-     * @param int[]  $codepoints The invalid code points
+     * @param int[] $codepoints The invalid code points
      * @param string $characters The invalid characters
      */
     public function __construct(array $codepoints, $characters = '')

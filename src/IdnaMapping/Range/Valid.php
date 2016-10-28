@@ -49,7 +49,7 @@ class Valid extends Range
      * Initializes the instance.
      *
      * @param TableRow $row
-     * @param bool     $disallowedSTD3
+     * @param bool $disallowedSTD3
      *
      * @throws Exception
      */

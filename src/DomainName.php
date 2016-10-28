@@ -28,7 +28,7 @@ class DomainName
      */
     protected $codepointConverter;
     /**
-     * @param string                      $name
+     * @param string $name
      * @param CodepointConverterInterface $codepointConverter
      *
      * @throws InvalidDomainNameCharacters

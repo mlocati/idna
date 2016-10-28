@@ -6081,7 +6081,7 @@ class IdnaMap
     /**
      * Get the mapping for a specific code point.
      *
-     * @param int  $codepoint
+     * @param int $codepoint
      * @param bool $useSTD3ASCIIRules
      *
      * @return int[]|null
@@ -6095,7 +6095,7 @@ class IdnaMap
             $result = static::$mappedDisallowedSTD3[$codepoint];
         }
 
-        return  $result;
+        return $result;
     }
 
     protected static $validSingle = [
@@ -13044,9 +13044,9 @@ class IdnaMap
     /**
      * Check if a code point is valid.
      *
-     * @param int   $codepoint
+     * @param int $codepoint
      * @param int[] $exclude
-     * @param bool  $useSTD3ASCIIRules
+     * @param bool $useSTD3ASCIIRules
      *
      * @return bool
      */
