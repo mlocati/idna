@@ -5,23 +5,17 @@ namespace MLocati\IDNA;
 use MLocati\IDNA\CodepointConverter\CodepointConverterInterface;
 use MLocati\IDNA\CodepointConverter\Utf8;
 use MLocati\IDNA\Exception\InvalidDomainNameCharacters;
+use MLocati\IDNA\Exception\InvalidPunycode;
 use MLocati\IDNA\Exception\InvalidString;
 
 class DomainName
 {
     /**
-     * The original domain name as received from input.
-     *
-     * @var string
-     */
-    protected $originalName;
-
-    /**
      * The domain name with normalized (ie valid) characters.
      *
      * @var string
      */
-    protected $normalizedName;
+    protected $name;
 
     /**
      * The punycode of the normalized name.
@@ -53,15 +47,29 @@ class DomainName
 
     /**
      * Initializes the instance.
+     *
+     * @param int[] $codepoints
+     * @param CodepointConverterInterface $codepointConverter
      */
-    protected function __construct(CodepointConverterInterface $codepointConverter = null)
+    protected function __construct(array $codepoints, CodepointConverterInterface $codepointConverter = null)
     {
-        $this->originalName = '';
-        $this->normalizedName = '';
-        $this->punycode = '';
-        $this->deviatedName = '';
-        $this->deviatedPunycode = '';
-        $this->codepointConverter = ($codepointConverter === null) ? new Utf8() : $codepointConverter;
+        $this->codepointConverter = ($codepointConverter === null) ? static::getDefaultCodepointConverter() : $codepointConverter;
+
+        $codepoints = $this->removeIgnored($codepoints);
+        $codepoints = $this->applyMapping($codepoints);
+        $this->checkValid($codepoints);
+        $this->name = $this->codepointConverter->codepointsToString($codepoints);
+        $this->punycode = Punycode::encodeDomainName($codepoints);
+        $deviatedCodepoints = $this->applyDeviations($codepoints);
+        if ($deviatedCodepoints === null) {
+            $this->deviatedName = '';
+            $this->deviatedPunycode = '';
+        } else {
+            $this->deviatedName = $this->codepointConverter->codepointsToString($deviatedCodepoints);
+            $this->deviatedPunycode = Punycode::encodeDomainName($deviatedCodepoints);
+        }
+
+        return $this;
     }
 
     /**
@@ -77,41 +85,27 @@ class DomainName
      */
     public static function fromName($name, CodepointConverterInterface $codepointConverter = null)
     {
-        $result = new static($codepointConverter);
-        $result->originalName = $name;
-        $codepoints = $result->codepointConverter->stringToCodepoints($name);
-        $codepoints = $result->removeIgnored($codepoints);
-        $codepoints = $result->applyMapping($codepoints);
-        $result->checkValid($codepoints);
-        $result->normalizedName = $result->codepointConverter->codepointsToString($codepoints);
-        $result->punycode = Punycode::encodeDomainName($codepoints);
-        $deviatedCodepoints = $result->applyDeviations($codepoints);
-        if ($deviatedCodepoints !== null) {
-            $result->deviatedName = $result->codepointConverter->codepointsToString($deviatedCodepoints);
-            $result->deviatedPunycode = Punycode::encodeDomainName($deviatedCodepoints);
+        if ($codepointConverter === null) {
+            $codepointConverter = static::getDefaultCodepointConverter();
         }
 
-        return $result;
+        return new static($codepointConverter->stringToCodepoints($name), $codepointConverter);
     }
 
     /**
-     * Get the original domain name as received from input.
+     * Creates a new instance of the class starting from a string containing the domain punycode.
      *
-     * @return string
-     */
-    public function getOriginalName()
-    {
-        return $this->originalName;
-    }
-
-    /**
-     * Check if the original name needed remapping to build a normalized domain name.
+     * @param string $punycode The punycode
+     * @param CodepointConverterInterface $codepointConverter The converter to handle the name (defaults to UTF-8)
      *
-     * @return bool
+     * @throws InvalidPunycode Throws an InvalidPunycode exception if $punycode is not a valid
+     * @throws InvalidDomainNameCharacters Throws an InvalidDomainNameCharacters if the domain name corresponding th punycode contains characters marked as Invalid by the IDNA Mapping table
+     *
+     * @return static
      */
-    public function neededRemapping()
+    public static function fromPunycode($punycode, CodepointConverterInterface $codepointConverter = null)
     {
-        return $this->normalizedName !== $this->originalName;
+        return new static(Punycode::decodeDomainName($punycode), $codepointConverter);
     }
 
     /**
@@ -119,9 +113,9 @@ class DomainName
      *
      * @return string
      */
-    public function getNormalizedName()
+    public function getName()
     {
-        return $this->normalizedName;
+        return $this->name;
     }
 
     /**
@@ -259,5 +253,15 @@ class DomainName
         }
 
         return $someFound ? $result : null;
+    }
+
+    /**
+     * Get the default CodepointConverter.
+     *
+     * @return CodepointConverterInterface
+     */
+    protected static function getDefaultCodepointConverter()
+    {
+        return new Utf8();
     }
 }

@@ -35,8 +35,20 @@ class DomainNameTest extends PHPUnit_Framework_TestCase
     public function testDomainNameFromName($originalName, $normalizedName, $punycode, $deviatedName = '', $deviatedPunycode = '')
     {
         $domainName = DomainName::fromName($originalName, static::$codepointConverter);
-        $this->assertSame($originalName, $domainName->getOriginalName());
-        $this->assertSame($normalizedName, $domainName->getNormalizedName());
+        $this->assertSame($normalizedName, $domainName->getName());
+        $this->assertSame($punycode, $domainName->getPunycode());
+        $this->assertSame($deviatedName !== '', $domainName->isDeviated());
+        $this->assertSame($deviatedName, $domainName->getDeviatedName());
+        $this->assertSame($deviatedPunycode, $domainName->getDeviatedPunycode());
+    }
+
+    /**
+     * @dataProvider domainNameProvider
+     */
+    public function testDomainNameFromPunycode($originalName, $normalizedName, $punycode, $deviatedName = '', $deviatedPunycode = '')
+    {
+        $domainName = DomainName::fromPunycode($punycode, static::$codepointConverter);
+        $this->assertSame($normalizedName, $domainName->getName());
         $this->assertSame($punycode, $domainName->getPunycode());
         $this->assertSame($deviatedName !== '', $domainName->isDeviated());
         $this->assertSame($deviatedName, $domainName->getDeviatedName());
