@@ -47,14 +47,19 @@ class PunycodeTest extends PHPUnit_Framework_TestCase
      */
     public function testPunycode($extended, $punycode)
     {
-        $out = '';
+        $extendedCodepoints = self::$codepointConverter->stringToCodepoints($extended);
         $this->assertSame(
-            strtolower($punycode),
-            Punycode::encodeDomainName(self::$codepointConverter->stringToCodepoints($extended))
+            $punycode,
+            Punycode::encodeDomainName($extendedCodepoints)
         );
         $this->assertSame(
-            self::$codepointConverter->stringToCodepoints(mb_strtolower($extended, 'UTF-8')),
+            $extendedCodepoints,
             Punycode::decodeDomainName($punycode)
+        );
+        $upperCasePunicode = strtoupper($punycode);
+        $this->assertSame(
+            $extendedCodepoints,
+            Punycode::decodeDomainName($upperCasePunicode)
         );
     }
 }

@@ -246,7 +246,7 @@ class Punycode
     protected static function decodeDomainLabel($label)
     {
         $usAscii = new USAscii();
-        if (strpos($label, static::PREFIX) !== 0) {
+        if (stripos($label, static::PREFIX) !== 0) {
             $result = $usAscii->stringToCodepoints($label);
         } else {
             $input = substr($label, strlen(static::PREFIX));
@@ -257,7 +257,7 @@ class Punycode
                 $outputLength = 0;
                 $in = 0;
             } else {
-                $result = $usAscii->stringToCodepoints(substr($input, 0, $in));
+                $result = $usAscii->stringToCodepoints(strtolower(substr($input, 0, $in)));
                 $outputLength = $in;
                 ++$in;
             }
