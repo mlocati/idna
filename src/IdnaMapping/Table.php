@@ -124,7 +124,6 @@ class Table
         $rows[] = '    {';
         $rows[] = '        return isset(static::$deviations[$codepoint]) ? static::$deviations[$codepoint] : null;';
         $rows[] = '    }';
-        $rows[] = '';
         // Disallowed
         if ($options['disallowed']) {
             $disallowedSingle = array();
@@ -142,6 +141,7 @@ class Table
                     }
                 }
             }
+            $rows[] = '';
             $rows[] = '    protected static $disallowedSingle = array(';
             foreach ($disallowedSingle as $disallowed) {
                 $row = '        '.$disallowed->range[0].',';
@@ -155,7 +155,7 @@ class Table
             $rows[] = '    /**';
             $rows[] = '     * Check if a code point is disallowed.';
             $rows[] = '     *';
-            $rows[] = '     * @param int  $codepoint';
+            $rows[] = '     * @param int $codepoint';
             $rows[] = '     * @param bool $useSTD3ASCIIRules';
             $rows[] = '     *';
             $rows[] = '     * @return bool';
@@ -268,7 +268,7 @@ class Table
         $rows[] = '    /**';
         $rows[] = '     * Get the mapping for a specific code point.';
         $rows[] = '     *';
-        $rows[] = '     * @param int  $codepoint';
+        $rows[] = '     * @param int $codepoint';
         $rows[] = '     * @param bool $useSTD3ASCIIRules';
         $rows[] = '     *';
         $rows[] = '     * @return int[]|null';
@@ -282,7 +282,7 @@ class Table
         $rows[] = '            $result = static::$mappedDisallowedSTD3[$codepoint];';
         $rows[] = '        }';
         $rows[] = '';
-        $rows[] = '        return  $result;';
+        $rows[] = '        return $result;';
         $rows[] = '    }';
         // Valid
         $validSingle = array(
@@ -325,9 +325,9 @@ class Table
         $rows[] = '    /**';
         $rows[] = '     * Check if a code point is valid.';
         $rows[] = '     *';
-        $rows[] = '     * @param int   $codepoint';
+        $rows[] = '     * @param int $codepoint';
         $rows[] = '     * @param int[] $exclude';
-        $rows[] = '     * @param bool  $useSTD3ASCIIRules';
+        $rows[] = '     * @param bool $useSTD3ASCIIRules';
         $rows[] = '     *';
         $rows[] = '     * @return bool';
         $rows[] = '     */';
