@@ -163,24 +163,20 @@ class Punycode
     protected static function encodeDomainLabel(array $codepoints)
     {
         // Split basic and non-basic code points
-        $basicCodepoints = array_filter(
-            $codepoints,
-            function ($codepoint) {
-                return $codepoint < self::BOOTSTRING_INITIAL_N;
+        $basicCodepoints = array();
+        $extraCodepoints = array();
+        foreach ($codepoints as $codepoint) {
+            if ($codepoint < self::BOOTSTRING_INITIAL_N) {
+                $basicCodepoints[] = $codepoint;
+            } else {
+                $extraCodepoints[] = $codepoint;
             }
-        );
-        $extraCodepoints = array_filter(
-            $codepoints,
-            function ($codepoint) {
-                return $codepoint >= self::BOOTSTRING_INITIAL_N;
-            }
-        );
+        }
         // Handle the basic code points
         $numBasicCodepoints = count($basicCodepoints);
         if ($numBasicCodepoints === 0) {
             $result = '';
         } else {
-            $basicCodepoints = array_values($basicCodepoints);
             $usAscii = new USAscii();
             $result = strtolower($usAscii->codepointsToString($basicCodepoints));
         }
