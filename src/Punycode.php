@@ -4,7 +4,6 @@ namespace MLocati\IDNA;
 
 use MLocati\IDNA\CodepointConverter\USAscii;
 use MLocati\IDNA\Exception\InvalidPunycode;
-use MLocati\IDNA\Exception\InvalidString;
 
 /**
  * Convert domain names to/from punycode.
@@ -13,6 +12,27 @@ use MLocati\IDNA\Exception\InvalidString;
  */
 class Punycode
 {
+    /**
+     * Maximum number of labels in domain names.
+     *
+     * @var int
+     */
+    const MAX_DOMAINNAME_LABELS = 127;
+
+    /**
+     * Maximum number of characters in domain names.
+     *
+     * @var int
+     */
+    const MAX_DOMAINNAME_CHARACTERS = 254;
+
+    /**
+     * Maximum number of characters in domain name labels.
+     *
+     * @var int
+     */
+    const MAX_DOMAINLABEL_CHARACTERS = 63;
+
     /**
      * Size of the dictionary.
      *
@@ -77,7 +97,7 @@ class Punycode
     const PREFIX = 'xn--';
 
     /**
-     * The code point of the domain name labels separator.
+     * The code point of the domain name labels separator (".").
      *
      * @var int
      */
@@ -135,8 +155,12 @@ class Punycode
     {
         $result = array();
         $first = true;
+        $labels = explode(chr(static::LABEL_SEPARATOR), (string) $punycode);
+        if (count($labels) > static::MAX_DOMAINNAME_LABELS) {
+            throw new InvalidPunycode($punycode);
+        }
         try {
-            foreach (explode(chr(static::LABEL_SEPARATOR), (string) $punycode) as $label) {
+            foreach ($labels as $label) {
                 if ($first) {
                     $first = false;
                 } else {
@@ -146,7 +170,8 @@ class Punycode
             }
         } catch (InvalidPunycode $x) {
             throw new InvalidPunycode($punycode);
-        } catch (InvalidString $x) {
+        }
+        if (isset($result[static::MAX_DOMAINNAME_CHARACTERS])) {
             throw new InvalidPunycode($punycode);
         }
 
@@ -235,29 +260,37 @@ class Punycode
      * @param string $label
      *
      * @throws InvalidPunycode
-     * @throws InvalidString
      *
      * @return int[]
      */
     protected static function decodeDomainLabel($label)
     {
+        $originalLabel = $label;
+        $label = @strtolower((string) $label);
+        $invalidCharacters = array_diff(
+            array_unique(str_split($label)),
+            array_merge(str_split(self::DICTIONARY), array('-'))
+        );
+        if (!empty($invalidCharacters)) {
+            throw new InvalidPunycode($originalLabel);
+        }
         $usAscii = new USAscii();
-        if (stripos($label, self::PREFIX) !== 0) {
+        if (strpos($label, self::PREFIX) !== 0) {
             $result = $usAscii->stringToCodepoints($label);
         } else {
             $input = substr($label, strlen(self::PREFIX));
             // Handle the basic code points
-            $in = strrpos($input, self::DELIMITER);
-            if ($in === false) {
+            $b = strrpos($input, self::DELIMITER);
+            if ($b === false) {
                 $result = array();
-                $outputLength = 0;
-                $in = 0;
+                $out = 0;
+                $b = 0;
             } else {
-                $result = $usAscii->stringToCodepoints(strtolower(substr($input, 0, $in)));
-                $outputLength = $in;
-                ++$in;
+                $result = $usAscii->stringToCodepoints(substr($input, 0, $b));
+                $out = $b;
+                ++$b;
             }
-            // $in: the index of the next character to be consumed
+            // $b: the position after the last delimiter, or 0 if there is none
             // Initialize the state
             $dictionary = self::DICTIONARY;
             $n = self::BOOTSTRING_INITIAL_N;
@@ -265,34 +298,35 @@ class Punycode
             $i = 0;
             $inputLength = strlen($input);
             // Main decoding loop
-            while ($in < $inputLength) {
-                // Decode a generalized variable-length integer into delta, which gets added to i.
+            for ($in = $b;  $in < $inputLength;) {
+                // $in: the index of the next character to be consumed
+                // Decode a generalized variable-length integer into $delta, which gets added to $i.
                 for ($oldi = $i, $w = 1, $k = self::BOOTSTRING_BASE; ; $k += self::BOOTSTRING_BASE) {
                     if ($in >= $inputLength) {
-                        throw new InvalidPunycode($label);
+                        throw new InvalidPunycode($originalLabel);
                     }
-                    $char = $input[$in];
-                    if ($char >= 'A' && $char <= 'Z') {
-                        $char = strtolower($char);
-                    }
-                    $digit = strpos(self::DICTIONARY, $char);
-                    if ($digit === false) {
-                        throw new InvalidPunycode($label);
-                    }
+                    $digit = strpos(self::DICTIONARY, $input[$in]);
                     ++$in;
                     $i += $digit * $w;
+                    // Check if $i is int
                     $t = self::threshold($k, $bias);
                     if ($digit < $t) {
                         break;
                     }
                     $w *= self::BOOTSTRING_BASE - $t;
+                    // Check if $w is int
                 }
-                $bias = self::adapt($i - $oldi, ++$outputLength, ($oldi === 0));
-                $n += (int) ($i / $outputLength);
-                $i %= $outputLength;
+                $bias = self::adapt($i - $oldi, ++$out, ($oldi === 0));
+                $n += (int) ($i / $out);
+                // Check if $n is int
+                $i %= $out;
+                // Insert $n at position $i of the output
                 array_splice($result, $i, 0, array($n));
                 ++$i;
             }
+        }
+        if (!isset($result[0]) || isset($result[static::MAX_DOMAINLABEL_CHARACTERS])) {
+            throw new InvalidPunycode($originalLabel);
         }
 
         return $result;
@@ -308,13 +342,7 @@ class Punycode
      */
     protected static function threshold($k, $bias)
     {
-        if ($k <= $bias) {
-            return self::BOOTSTRING_TMIN;
-        } elseif ($k >= $bias + self::BOOTSTRING_TMAX) {
-            return self::BOOTSTRING_TMAX;
-        } else {
-            return $k - $bias;
-        }
+        return min(max($k - $bias, self::BOOTSTRING_TMIN), self::BOOTSTRING_TMAX);
     }
 
     /**
