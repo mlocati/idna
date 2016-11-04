@@ -42,6 +42,7 @@ Since the resulting Punycode is different (it's called ***deviation***), this le
 - consistency across different PHP versions
 - results are granted to follow the standards (it's not just a bare *multibyte to punycode* conversion library)
 - designed with speed in mind
+- compatible with PHP 5.3
 
 ## Sample usage
 
