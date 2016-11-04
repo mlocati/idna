@@ -29,7 +29,7 @@ abstract class CodepointConverter implements CodepointConverterInterface
     public function characterToCodepoint($character)
     {
         $char = null;
-        if (is_object($character) && is_callable([$character, '__toString'])) {
+        if (is_object($character) && is_callable(array($character, '__toString'))) {
             $char = (string) $character;
         } elseif (is_string($character)) {
             $char = $character;
@@ -48,7 +48,7 @@ abstract class CodepointConverter implements CodepointConverterInterface
      */
     public function charactersToCodepoints(array $characters)
     {
-        $result = [];
+        $result = array();
         foreach ($characters as $character) {
             $result[] = $this->characterToCodepoint($character);
         }
@@ -89,7 +89,7 @@ abstract class CodepointConverter implements CodepointConverterInterface
      */
     public function codepointsToCharacters(array $codepoints)
     {
-        $result = [];
+        $result = array();
         foreach ($codepoints as $codepoint) {
             $result[] = $this->codepointToCharacter($codepoint);
         }
@@ -121,7 +121,7 @@ abstract class CodepointConverter implements CodepointConverterInterface
      */
     public function stringToCharacters($string)
     {
-        $result = [];
+        $result = array();
         $string = (string) $string;
         $numBytes = strlen($string);
         $minBytesPerCharacter = $this->getMinBytesPerCharacter();
@@ -157,7 +157,7 @@ abstract class CodepointConverter implements CodepointConverterInterface
      */
     public function stringToCodepoints($string)
     {
-        $result = [];
+        $result = array();
         foreach ($this->stringToCharacters($string) as $character) {
             try {
                 $result[] = $this->characterToCodepoint($character);

@@ -167,7 +167,7 @@ class DomainName
      */
     protected function removeIgnored(array $codepoints)
     {
-        $result = [];
+        $result = array();
         foreach ($codepoints as $codepoint) {
             if (!IdnaMap::isIgnored($codepoint)) {
                 $result[] = $codepoint;
@@ -186,7 +186,7 @@ class DomainName
      */
     protected function applyMapping(array $codepoints)
     {
-        $result = [];
+        $result = array();
         foreach ($codepoints as $codepoint) {
             $mapped = IdnaMap::getMapped($codepoint);
             if ($mapped === null) {
@@ -208,11 +208,11 @@ class DomainName
      */
     protected function checkValid(array $codepoints)
     {
-        $invalidCodepoints = [];
-        $invalidCharacters = [];
+        $invalidCodepoints = array();
+        $invalidCharacters = array();
         foreach ($codepoints as $codepoint) {
             if (IdnaMap::getDeviation($codepoint) === null) {
-                if (IdnaMap::isValid($codepoint, [IdnaMap::EXCLUDE_ALWAYS, IdnaMap::EXCLUDE_CURRENT]) !== true) {
+                if (IdnaMap::isValid($codepoint, array(IdnaMap::EXCLUDE_ALWAYS, IdnaMap::EXCLUDE_CURRENT)) !== true) {
                     if (!in_array($codepoint, $invalidCodepoints)) {
                         $invalidCodepoints[] = $codepoint;
                         if ($invalidCharacters !== null) {
@@ -241,7 +241,7 @@ class DomainName
     protected function applyDeviations(array $codepoints)
     {
         $someFound = false;
-        $result = [];
+        $result = array();
         foreach ($codepoints as $codepoint) {
             $deviated = IdnaMap::getDeviation($codepoint);
             if ($deviated === null) {

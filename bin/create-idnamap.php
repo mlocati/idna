@@ -2,10 +2,10 @@
 
 use MLocati\IDNA\IdnaMapping\Table;
 
-$defaultSavePath = implode(DIRECTORY_SEPARATOR, [dirname(__DIR__), 'src', 'IdnaMap.php']);
+$defaultSavePath = implode(DIRECTORY_SEPARATOR, array(dirname(__DIR__), 'src', 'IdnaMap.php'));
 
-$arguments = [];
-$options = [];
+$arguments = array();
+$options = array();
 
 $stopArgs = false;
 foreach ($argv as $argi => $arg) {
@@ -25,7 +25,7 @@ foreach ($argv as $argi => $arg) {
     }
 }
 
-if (empty($arguments) || count(array_intersect($options, ['-h', '--help', '/?'])) > 0) {
+if (empty($arguments) || count(array_intersect($options, array('-h', '--help', '/?'))) > 0) {
     $myName = basename(__FILE__, '.php');
     echo <<<EOT
 This command is useful to parse the Unicode IDNA Mapping Table and create a PHP class from it.
@@ -79,7 +79,7 @@ try {
     if ($filename !== '') {
         echo 'Creating PHP code... ';
     }
-    $opts = [];
+    $opts = array();
     if ($debug) {
         $opts['comments'] = true;
         $opts['disallowed'] = true;

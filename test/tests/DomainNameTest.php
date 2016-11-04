@@ -5,8 +5,6 @@ namespace MLocati\IDNA\Tests;
 use Exception;
 use MLocati\IDNA\CodepointConverter\Utf8;
 use MLocati\IDNA\DomainName;
-use MLocati\IDNA\Exception\InvalidDomainNameCharacters;
-use MLocati\IDNA\Exception\InvalidString;
 use PHPUnit_Framework_TestCase;
 
 class DomainNameTest extends PHPUnit_Framework_TestCase
@@ -23,10 +21,10 @@ class DomainNameTest extends PHPUnit_Framework_TestCase
 
     public function domainNameProvider()
     {
-        return [
-            ['GitHub.com', 'github.com', 'github.com'],
-            ['faß.de', 'faß.de', 'xn--fa-hia.de', 'fass.de', 'fass.de'],
-        ];
+        return array(
+            array('GitHub.com', 'github.com', 'github.com'),
+            array('faß.de', 'faß.de', 'xn--fa-hia.de', 'fass.de', 'fass.de'),
+        );
     }
 
     /**
@@ -57,13 +55,13 @@ class DomainNameTest extends PHPUnit_Framework_TestCase
 
     public function invalidDomainsProvider()
     {
-        return [
-            ['email@example.com', InvalidDomainNameCharacters::class, 'The domain name contains an invalid character: @'],
-            ['http://www.domain.com', InvalidDomainNameCharacters::class, "The domain name contains 2 invalid characters:\n:\n/"],
-            ["www\0.domain.com", InvalidDomainNameCharacters::class],
-            ["\xFF", InvalidString::class],
-            ["\xFF\xFF\xFF\xFF", InvalidString::class],
-        ];
+        return array(
+            array('email@example.com', 'MLocati\IDNA\Exception\InvalidDomainNameCharacters', 'The domain name contains an invalid character: @'),
+            array('http://www.domain.com', 'MLocati\IDNA\Exception\InvalidDomainNameCharacters', "The domain name contains 2 invalid characters:\n:\n/"),
+            array("www\0.domain.com", 'MLocati\IDNA\Exception\InvalidDomainNameCharacters'),
+            array("\xFF", 'MLocati\IDNA\Exception\InvalidString'),
+            array("\xFF\xFF\xFF\xFF", 'MLocati\IDNA\Exception\InvalidString'),
+        );
     }
     /**
      * @dataProvider invalidDomainsProvider

@@ -21,10 +21,10 @@ class PunycodeTest extends PHPUnit_Framework_TestCase
 
     public function punycodeProvider()
     {
-        $result = [];
+        $result = array();
         $data = @file_get_contents(dirname(__DIR__).'/assets/punycode.bin');
         $lines = explode("\n", $data);
-        $test = [];
+        $test = array();
         foreach ($lines as $line) {
             if ($line === '' || $line[0] === '#') {
                 continue;
@@ -32,7 +32,7 @@ class PunycodeTest extends PHPUnit_Framework_TestCase
             $test[] = $line;
             if (count($test) === 2) {
                 $result[] = $test;
-                $test = [];
+                $test = array();
             }
         }
         if (!empty($test)) {

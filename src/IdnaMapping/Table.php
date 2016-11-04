@@ -52,17 +52,17 @@ class Table
      *     @var bool $disallowed Include disallowed? [default: false]
      * }
      */
-    public function buildMapClass(array $options = [])
+    public function buildMapClass(array $options = array())
     {
-        $options += [
+        $options += array(
             'namespace' => 'MLocati\IDNA',
             'className' => 'IdnaMap',
             'comments' => false,
             'disallowed' => false,
-        ];
-        $validNames = [];
+        );
+        $validNames = array();
         // Opening
-        $rows = ['<?php'];
+        $rows = array('<?php');
         $rows[] = '';
         $rows[] = "namespace {$options['namespace']};";
         $rows[] = '';
@@ -93,15 +93,15 @@ class Table
         $validNames[Valid::EXCLUDE_CURRENT] = 'EXCLUDE_CURRENT';
         // Deviations
         $rows[] = '';
-        $rows[] = '    protected static $deviations = [';
+        $rows[] = '    protected static $deviations = array(';
         foreach ($this->ranges as $range) {
             if ($range instanceof Deviation) {
                 foreach ($range->expandRange() as $deviation) {
                     $row = '        '.$deviation->range[0].' => ';
                     if ($deviation->idna2003Replacement === null) {
-                        $row .= '[]';
+                        $row .= 'array()';
                     } else {
-                        $row .= '['.implode(', ', $deviation->idna2003Replacement).']';
+                        $row .= 'array('.implode(', ', $deviation->idna2003Replacement).')';
                     }
                     $row .= ',';
                     if ($options['comments'] && $deviation->comment !== '') {
@@ -111,7 +111,7 @@ class Table
                 }
             }
         }
-        $rows[] = '    ];';
+        $rows[] = '    );';
         $rows[] = '';
         $rows[] = '    /**';
         $rows[] = '     * Get the IDNA2003 deviation from IDNA2008 for a specific code point.';
@@ -127,8 +127,8 @@ class Table
         $rows[] = '';
         // Disallowed
         if ($options['disallowed']) {
-            $disallowedSingle = [];
-            $disallowedRange = [];
+            $disallowedSingle = array();
+            $disallowedRange = array();
             foreach ($this->ranges as $range) {
                 if ($range instanceof Disallowed) {
                     if (!isset($range->range[1])) {
@@ -142,7 +142,7 @@ class Table
                     }
                 }
             }
-            $rows[] = '    protected static $disallowedSingle = [';
+            $rows[] = '    protected static $disallowedSingle = array(';
             foreach ($disallowedSingle as $disallowed) {
                 $row = '        '.$disallowed->range[0].',';
                 if ($options['comments'] && $disallowed->comment !== '') {
@@ -150,7 +150,7 @@ class Table
                 }
                 $rows[] = $row;
             }
-            $rows[] = '    ];';
+            $rows[] = '    );';
             $rows[] = '';
             $rows[] = '    /**';
             $rows[] = '     * Check if a code point is disallowed.';
@@ -187,8 +187,8 @@ class Table
             $rows[] = '    }';
         }
         // Ignored
-        $ignoredSingle = [];
-        $ignoredRange = [];
+        $ignoredSingle = array();
+        $ignoredRange = array();
         foreach ($this->ranges as $range) {
             if ($range instanceof Ignored) {
                 if (!isset($range->range[1])) {
@@ -203,7 +203,7 @@ class Table
             }
         }
         $rows[] = '';
-        $rows[] = '    protected static $ignoredSingle = [';
+        $rows[] = '    protected static $ignoredSingle = array(';
         foreach ($ignoredSingle as $ignored) {
             $row = '        '.$ignored->range[0].',';
             if ($options['comments'] && $ignored->comment !== '') {
@@ -211,7 +211,7 @@ class Table
             }
             $rows[] = $row;
         }
-        $rows[] = '    ];';
+        $rows[] = '    );';
         $rows[] = '';
         $rows[] = '    /**';
         $rows[] = '     *Check if a codepoint is ignored.';
@@ -239,10 +239,10 @@ class Table
         $rows[] = '        return $result;';
         $rows[] = '    }';
         // Mapped
-        $mapped = [
-            0 => [],
-            1 => [],
-        ];
+        $mapped = array(
+            0 => array(),
+            1 => array(),
+        );
         foreach ($this->ranges as $range) {
             if ($range instanceof Mapped) {
                 $index = $range->disallowedSTD3 ? 1 : 0;
@@ -251,18 +251,18 @@ class Table
                 }
             }
         }
-        foreach ([0 => '$mapped', 1 => '$mappedDisallowedSTD3'] as $index => $varName) {
+        foreach (array(0 => '$mapped', 1 => '$mappedDisallowedSTD3') as $index => $varName) {
             $rows[] = '';
-            $rows[] = '    protected static '.$varName.' = [';
+            $rows[] = '    protected static '.$varName.' = array(';
             foreach ($mapped[$index] as $m) {
-                $row = '        '.$m->range[0].' => ['.implode(', ', $m->to).']';
+                $row = '        '.$m->range[0].' => array('.implode(', ', $m->to).')';
                 $row .= ',';
                 if ($options['comments'] && $m->comment !== '') {
                     $row .= ' // '.$m->comment;
                 }
                 $rows[] = $row;
             }
-            $rows[] = '    ];';
+            $rows[] = '    );';
         }
         $rows[] = '';
         $rows[] = '    /**';
@@ -285,11 +285,11 @@ class Table
         $rows[] = '        return  $result;';
         $rows[] = '    }';
         // Valid
-        $validSingle = [
-            0 => [],
-            1 => [],
-        ];
-        $validRange = [];
+        $validSingle = array(
+            0 => array(),
+            1 => array(),
+        );
+        $validRange = array();
         foreach ($this->ranges as $range) {
             if ($range instanceof Valid) {
                 $singleIndex = $range->disallowedSTD3 ? 1 : 0;
@@ -304,9 +304,9 @@ class Table
                 }
             }
         }
-        foreach ([0 => '$validSingle', 1 => '$validDisallowedSTD3'] as $index => $varName) {
+        foreach (array(0 => '$validSingle', 1 => '$validDisallowedSTD3') as $index => $varName) {
             $rows[] = '';
-            $rows[] = '    protected static '.$varName.' = [';
+            $rows[] = '    protected static '.$varName.' = array(';
             foreach ($validSingle[$index] as $v) {
                 /* @var Valid $v */
                 $row = '        '.$v->range[0].' => ';
@@ -319,7 +319,7 @@ class Table
                 }
                 $rows[] = $row;
             }
-            $rows[] = '    ];';
+            $rows[] = '    );';
         }
         $rows[] = '';
         $rows[] = '    /**';
@@ -331,7 +331,7 @@ class Table
         $rows[] = '     *';
         $rows[] = '     * @return bool';
         $rows[] = '     */';
-        $rows[] = '    public static function isValid($codepoint, array $exclude = [], $useSTD3ASCIIRules = true)';
+        $rows[] = '    public static function isValid($codepoint, array $exclude = array(), $useSTD3ASCIIRules = true)';
         $rows[] = '    {';
         $rows[] = '        $excluded = null;';
         $rows[] = '        if (isset(static::$validSingle[$codepoint])) {';
@@ -422,7 +422,7 @@ class Table
     {
         $version = '';
         $date = '';
-        $ranges = [];
+        $ranges = array();
         $text = (string) $text;
         if ($text === '') {
             throw new InvalidParameter(__METHOD__, '$text', 'Empty text');
@@ -455,7 +455,7 @@ class Table
                 return $a->range[0] - $b->range[0];
             }
         );
-        $merged = [];
+        $merged = array();
         $count = count($ranges);
         $previous = null;
         for ($index = 0; $index < $count; ++$index) {

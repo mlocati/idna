@@ -91,7 +91,7 @@ abstract class Range
      */
     public function expandRange()
     {
-        $result = [];
+        $result = array();
         if (isset($this->range[1])) {
             $rangeSize = $this->range[1] - $this->range[0] + 1;
             $comments = explode('..', $this->comment);
@@ -107,7 +107,7 @@ abstract class Range
                 if ($comments !== null) {
                     $clone->comment = array_shift($comments);
                 }
-                $clone->range = [$codepoint];
+                $clone->range = array($codepoint);
                 $result[] = $clone;
             }
         } else {

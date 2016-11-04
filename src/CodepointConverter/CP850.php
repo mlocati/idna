@@ -15,7 +15,7 @@ class CP850 extends CodepointConverter
      *
      * @var array
      */
-    protected static $extendedMap = [
+    protected static $extendedMap = array(
         0x80 => 0x00C7, // Ç
         0x81 => 0x00FC, // ü
         0x82 => 0x00E9, // é
@@ -144,7 +144,7 @@ class CP850 extends CodepointConverter
         0xFD => 0x00B2, // ²
         0xFE => 0x25A0, // ■
         0xFF => 0x00A0, // NBSP
-    ];
+    );
 
     /**
      * {@inheritdoc}
@@ -221,7 +221,7 @@ class CP850 extends CodepointConverter
     public function stringToCharacters($string)
     {
         $string = (string) $string;
-        $result = ($string === '') ? [] : str_split($string);
+        $result = ($string === '') ? array() : str_split($string);
 
         return $result;
     }

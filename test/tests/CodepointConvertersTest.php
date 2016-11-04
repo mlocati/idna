@@ -9,11 +9,11 @@ class CodepointConvertersTest extends PHPUnit_Framework_TestCase
 {
     public function specificCodepointsProvider()
     {
-        $result = [
-            [0x0000, "\0"],
-            [0x000a, "\n"],
-            [0x000d, "\r"],
-        ];
+        $result = array(
+            array(0x0000, "\0"),
+            array(0x000a, "\n"),
+            array(0x000d, "\r"),
+        );
         $data = @file_get_contents(dirname(__DIR__).'/assets/utf8-symbols.bin');
         $lines = explode("\n", $data);
         foreach ($lines as $line) {
