@@ -26,7 +26,7 @@ abstract class Exception extends \Exception
             case 'string':
                 return $var;
             case 'object':
-                if (is_callable([$var, '__toString'])) {
+                if (is_callable(array($var, '__toString'))) {
                     $result = (string) $var;
                 }
                 break;

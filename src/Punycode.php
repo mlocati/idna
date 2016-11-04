@@ -101,16 +101,16 @@ class Punycode
      */
     public static function encodeDomainName(array $codepoints)
     {
-        $labels = [];
+        $labels = array();
         $currentLabel = null;
         foreach ($codepoints as $codepoint) {
             if ($codepoint === static::LABEL_SEPARATOR) {
                 if ($currentLabel !== null) {
                     $labels[] = static::encodeDomainLabel($currentLabel);
                 }
-                $currentLabel = [];
+                $currentLabel = array();
             } elseif ($currentLabel === null) {
-                $currentLabel = [$codepoint];
+                $currentLabel = array($codepoint);
             } else {
                 $currentLabel[] = $codepoint;
             }
@@ -133,7 +133,7 @@ class Punycode
      */
     public static function decodeDomainName($punycode)
     {
-        $result = [];
+        $result = array();
         $first = true;
         try {
             foreach (explode(chr(static::LABEL_SEPARATOR), (string) $punycode) as $label) {
@@ -163,60 +163,56 @@ class Punycode
     protected static function encodeDomainLabel(array $codepoints)
     {
         // Split basic and non-basic code points
-        $basicCodepoints = array_filter(
-            $codepoints,
-            function ($codepoint) {
-                return $codepoint < static::BOOTSTRING_INITIAL_N;
+        $basicCodepoints = array();
+        $extraCodepoints = array();
+        foreach ($codepoints as $codepoint) {
+            if ($codepoint < self::BOOTSTRING_INITIAL_N) {
+                $basicCodepoints[] = $codepoint;
+            } else {
+                $extraCodepoints[] = $codepoint;
             }
-        );
-        $extraCodepoints = array_filter(
-            $codepoints,
-            function ($codepoint) {
-                return $codepoint >= static::BOOTSTRING_INITIAL_N;
-            }
-        );
+        }
         // Handle the basic code points
         $numBasicCodepoints = count($basicCodepoints);
         if ($numBasicCodepoints === 0) {
             $result = '';
         } else {
-            $basicCodepoints = array_values($basicCodepoints);
             $usAscii = new USAscii();
             $result = strtolower($usAscii->codepointsToString($basicCodepoints));
         }
         if (!empty($extraCodepoints)) {
             if ($numBasicCodepoints > 0) {
-                $result .= static::DELIMITER;
+                $result .= self::DELIMITER;
             }
             // Initialize the state
-            $n = static::BOOTSTRING_INITIAL_N;
-            $bias = static::BOOTSTRING_INITIAL_BIAS;
+            $n = self::BOOTSTRING_INITIAL_N;
+            $bias = self::BOOTSTRING_INITIAL_BIAS;
             $delta = 0;
             $h = $numBasicCodepoints;
             $extraCodepoints = array_unique($extraCodepoints);
             sort($extraCodepoints);
             $i = 0;
             $length = count($codepoints);
-            $dictionary = static::DICTIONARY;
+            $dictionary = self::DICTIONARY;
             // Main encoding loop
             while ($h < $length) {
                 $m = $extraCodepoints[$i++];
                 $delta += ($m - $n) * ($h + 1);
                 $n = $m;
                 foreach ($codepoints as $c) {
-                    if ($c < $n || $c < static::BOOTSTRING_INITIAL_N) {
+                    if ($c < $n || $c < self::BOOTSTRING_INITIAL_N) {
                         ++$delta;
                     }
                     if ($c === $n) {
                         // Represent delta as a generalized variable-length integer
-                        for ($q = $delta, $k = static::BOOTSTRING_BASE; ; $k += static::BOOTSTRING_BASE) {
+                        for ($q = $delta, $k = self::BOOTSTRING_BASE; ; $k += self::BOOTSTRING_BASE) {
                             $t = self::threshold($k, $bias);
                             if ($q < $t) {
                                 break;
                             }
-                            $code = $t + (($q - $t) % (static::BOOTSTRING_BASE - $t));
+                            $code = $t + (($q - $t) % (self::BOOTSTRING_BASE - $t));
                             $result .= $dictionary[$code];
-                            $q = ($q - $t) / (static::BOOTSTRING_BASE - $t);
+                            $q = ($q - $t) / (self::BOOTSTRING_BASE - $t);
                         }
                         $result .= $dictionary[(int) $q];
                         $bias = self::adapt($delta, $h + 1, ($h === $numBasicCodepoints));
@@ -227,7 +223,7 @@ class Punycode
                 ++$delta;
                 ++$n;
             }
-            $result = static::PREFIX.$result;
+            $result = self::PREFIX.$result;
         }
 
         return $result;
@@ -246,14 +242,14 @@ class Punycode
     protected static function decodeDomainLabel($label)
     {
         $usAscii = new USAscii();
-        if (stripos($label, static::PREFIX) !== 0) {
+        if (stripos($label, self::PREFIX) !== 0) {
             $result = $usAscii->stringToCodepoints($label);
         } else {
-            $input = substr($label, strlen(static::PREFIX));
+            $input = substr($label, strlen(self::PREFIX));
             // Handle the basic code points
-            $in = strrpos($input, static::DELIMITER);
+            $in = strrpos($input, self::DELIMITER);
             if ($in === false) {
-                $result = [];
+                $result = array();
                 $outputLength = 0;
                 $in = 0;
             } else {
@@ -263,15 +259,15 @@ class Punycode
             }
             // $in: the index of the next character to be consumed
             // Initialize the state
-            $dictionary = static::DICTIONARY;
-            $n = static::BOOTSTRING_INITIAL_N;
-            $bias = static::BOOTSTRING_INITIAL_BIAS;
+            $dictionary = self::DICTIONARY;
+            $n = self::BOOTSTRING_INITIAL_N;
+            $bias = self::BOOTSTRING_INITIAL_BIAS;
             $i = 0;
             $inputLength = strlen($input);
             // Main decoding loop
             while ($in < $inputLength) {
                 // Decode a generalized variable-length integer into delta, which gets added to i.
-                for ($oldi = $i, $w = 1, $k = static::BOOTSTRING_BASE; ; $k += static::BOOTSTRING_BASE) {
+                for ($oldi = $i, $w = 1, $k = self::BOOTSTRING_BASE; ; $k += self::BOOTSTRING_BASE) {
                     if ($in >= $inputLength) {
                         throw new InvalidPunycode($label);
                     }
@@ -279,7 +275,7 @@ class Punycode
                     if ($char >= 'A' && $char <= 'Z') {
                         $char = strtolower($char);
                     }
-                    $digit = strpos(static::DICTIONARY, $char);
+                    $digit = strpos(self::DICTIONARY, $char);
                     if ($digit === false) {
                         throw new InvalidPunycode($label);
                     }
@@ -289,12 +285,12 @@ class Punycode
                     if ($digit < $t) {
                         break;
                     }
-                    $w *= static::BOOTSTRING_BASE - $t;
+                    $w *= self::BOOTSTRING_BASE - $t;
                 }
                 $bias = self::adapt($i - $oldi, ++$outputLength, ($oldi === 0));
                 $n += (int) ($i / $outputLength);
                 $i %= $outputLength;
-                array_splice($result, $i, 0, [$n]);
+                array_splice($result, $i, 0, array($n));
                 ++$i;
             }
         }
@@ -313,9 +309,9 @@ class Punycode
     protected static function threshold($k, $bias)
     {
         if ($k <= $bias) {
-            return static::BOOTSTRING_TMIN;
-        } elseif ($k >= $bias + static::BOOTSTRING_TMAX) {
-            return static::BOOTSTRING_TMAX;
+            return self::BOOTSTRING_TMIN;
+        } elseif ($k >= $bias + self::BOOTSTRING_TMAX) {
+            return self::BOOTSTRING_TMAX;
         } else {
             return $k - $bias;
         }
@@ -333,20 +329,20 @@ class Punycode
     protected static function adapt($delta, $numPoints, $firstTime)
     {
         $delta = $firstTime ?
-            (int) $delta / static::BOOTSTRING_DAMP :
+            (int) $delta / self::BOOTSTRING_DAMP :
             $delta >> 1
         ;
         $delta += (int) ($delta / $numPoints);
-        $check = ((static::BOOTSTRING_BASE - static::BOOTSTRING_TMIN) * static::BOOTSTRING_TMAX) >> 1;
-        $multiplier = 1.0 / (static::BOOTSTRING_BASE - static::BOOTSTRING_TMIN);
+        $check = ((self::BOOTSTRING_BASE - self::BOOTSTRING_TMIN) * self::BOOTSTRING_TMAX) >> 1;
+        $multiplier = 1.0 / (self::BOOTSTRING_BASE - self::BOOTSTRING_TMIN);
         for (
             $k = 0;
             $delta > $check;
-            $k = $k + static::BOOTSTRING_BASE
+            $k = $k + self::BOOTSTRING_BASE
         ) {
             $delta = (int) ($delta * $multiplier);
         }
-        $k = $k + (int) (((static::BOOTSTRING_BASE - static::BOOTSTRING_TMIN + 1) * $delta) / ($delta + static::BOOTSTRING_SKEW));
+        $k = $k + (int) (((self::BOOTSTRING_BASE - self::BOOTSTRING_TMIN + 1) * $delta) / ($delta + self::BOOTSTRING_SKEW));
 
         return $k;
     }

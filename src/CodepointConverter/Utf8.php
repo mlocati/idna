@@ -125,7 +125,7 @@ class Utf8 extends CodepointConverter
     {
         $string = (string) $string;
         if ($string === '') {
-            $result = [];
+            $result = array();
         } else {
             $result = null;
             if (function_exists('preg_split')) {

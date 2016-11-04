@@ -73,7 +73,7 @@ class USAscii extends CodepointConverter
     public function stringToCharacters($string)
     {
         $string = (string) $string;
-        $result = [];
+        $result = array();
         if ($string !== '') {
             foreach (str_split($string) as $character) {
                 if (ord($character) > 0x7F) {

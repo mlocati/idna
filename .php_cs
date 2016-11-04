@@ -12,8 +12,8 @@ return Symfony\CS\Config\Config::create()
         'single_quote',
         // Allow 'return null'
         '-empty_return',
-        // Use the short array syntax
-        'short_array_syntax',
+        // Use the long array syntax
+        'long_array_syntax',
         // Ordering use statements
         'ordered_use'
     ))

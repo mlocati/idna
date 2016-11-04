@@ -89,7 +89,7 @@ class TableRow
             } else {
                 throw new Exception('Malformed comment');
             }
-            $fields = [];
+            $fields = array();
             foreach (explode(';', $data) as $field) {
                 $fields[] = trim($field);
             }
@@ -130,7 +130,7 @@ class TableRow
      */
     protected static function parseCodepointList($text, $separator, $mustBeSorted = false, $maxCount = null)
     {
-        $codePoints = [];
+        $codePoints = array();
         $count = 0;
         foreach (explode($separator, (string) $text) as $part) {
             ++$count;
