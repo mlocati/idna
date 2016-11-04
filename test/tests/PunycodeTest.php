@@ -6,6 +6,7 @@ use MLocati\IDNA\CodepointConverter\CodepointConverterInterface;
 use MLocati\IDNA\CodepointConverter\Utf8;
 use MLocati\IDNA\Punycode;
 use PHPUnit_Framework_TestCase;
+use Exception;
 
 class PunycodeTest extends PHPUnit_Framework_TestCase
 {
@@ -61,5 +62,39 @@ class PunycodeTest extends PHPUnit_Framework_TestCase
             $extendedCodepoints,
             Punycode::decodeDomainName($upperCasePunicode)
         );
+    }
+
+    public function invalidPunycodeProvider()
+    {
+        return array(
+            array(''),
+            array('.'),
+            array('www..com'),
+            array('This is invalid'),
+            array('\xFF\xFF\xFF\xFF'),
+            array('\xFF\xFF'),
+            array('123456789-123456789-123456789-123456789-123456789-123456789-1234'),
+            array('1.2.3.4.5.6.7.8.9.o.1.2.3.4.5.6.7.8.9.o.1.2.3.4.5.6.7.8.9.o.1.2.3.4.5.6.7.8.9.o.1.2.3.4.5.6.7.8.9.o.1.2.3.4.5.6.7.8.9.o.1.2.3.4.5.6.7.8.9.o.1.2.3.4.5.6.7.8.9.o.1.2.3.4.5.6.7.8.9.o.1.2.3.4.5.6.7.8.9.o.1.2.3.4.5.6.7.8.9.o.1.2.3.4.5.6.7.8.9.o.1.2.3.4.5.6.7.8'),
+            array('123456789.123456789.123456789.123456789.123456789.123456789.123456789.123456789.123456789.123456789.123456789.123456789.123456789.123456789.123456789.123456789.123456789.123456789.123456789.123456789.123456789.123456789.123456789.123456789.123456789.12345'),
+            array('xn---'),
+            array('xn--z'),
+            array('xn--zzzzzzzzzzzzzzzzzzzzzzzzzz'),
+        );
+    }
+    
+    /**
+     * @dataProvider invalidPunycodeProvider
+     */
+    public function testInvalidPunycode($punycode)
+    {
+        $exception = null;
+        try {
+            Punycode::decodeDomainName($punycode);
+        }
+        catch (Exception $x) {
+            $exception = $x;
+        }
+        $this->assertNotNull($exception);
+        $this->assertInstanceOf('MLocati\IDNA\Exception\InvalidPunycode', $exception);
     }
 }
