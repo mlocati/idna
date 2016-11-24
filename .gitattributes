@@ -4,4 +4,4 @@
 /.* export-ignore
 /*.yml export-ignore
 /*.xml export-ignore
-/README.md
+/README.md export-ignore
