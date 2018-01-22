@@ -19,9 +19,13 @@ matrix:
     - php: 5.3
       dist: precise
 
+before_script:
+  - travis_retry composer self-update --no-interaction || true
+  - travis_retry composer install --no-interaction --prefer-dist --optimize-autoloader
+
 script:
   - bin/create-idnamap.sh --debug test/assets/IdnaMappingTable.txt -
-  - phpunit
+  - ./vendor/bin/phpunit
 
 notifications:
   email: false
