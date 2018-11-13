@@ -4,9 +4,9 @@ namespace MLocati\IDNA\Tests;
 
 use MLocati\IDNA\CodepointConverter\CodepointConverterInterface;
 use MLocati\IDNA\IdnaMap;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class IdnaMapTest extends PHPUnit_Framework_TestCase
+class IdnaMapTest extends TestCase
 {
     protected static $idnaMapError = 'Not initialized';
 
@@ -64,5 +64,10 @@ class IdnaMapTest extends PHPUnit_Framework_TestCase
             }
             $this->assertTrue($covered, "Check that code point $codepoint (0x".dechex($codepoint).') is covered');
         }
+    }
+
+    public function testIsIgnoreIdOnValidCodepoint()
+    {
+        $this->assertTrue(IdnaMap::isIgnored(917760));
     }
 }

@@ -5,10 +5,10 @@ namespace MLocati\IDNA\Tests;
 use MLocati\IDNA\CodepointConverter\CodepointConverterInterface;
 use MLocati\IDNA\CodepointConverter\Utf8;
 use MLocati\IDNA\Punycode;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Exception;
 
-class PunycodeTest extends PHPUnit_Framework_TestCase
+class PunycodeTest extends TestCase
 {
     /**
      * @var CodepointConverterInterface
@@ -81,7 +81,7 @@ class PunycodeTest extends PHPUnit_Framework_TestCase
             array('xn--zzzzzzzzzzzzzzzzzzzzzzzzzz'),
         );
     }
-    
+
     /**
      * @dataProvider invalidPunycodeProvider
      */
