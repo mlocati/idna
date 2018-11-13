@@ -20,7 +20,6 @@ matrix:
       dist: precise
 
 before_script:
-  - travis_retry composer self-update --no-interaction || true
   - travis_retry composer install --no-interaction --prefer-dist --optimize-autoloader
 
 script:

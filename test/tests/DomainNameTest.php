@@ -5,9 +5,9 @@ namespace MLocati\IDNA\Tests;
 use Exception;
 use MLocati\IDNA\CodepointConverter\Utf8;
 use MLocati\IDNA\DomainName;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class DomainNameTest extends PHPUnit_Framework_TestCase
+class DomainNameTest extends TestCase
 {
     /**
      * @var CodepointConverterInterface
