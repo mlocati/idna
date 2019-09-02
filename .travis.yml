@@ -4,7 +4,11 @@ language: php
 
 branches:
   only:
-  - master
+    - master
+
+cache:
+  directories:
+    - $HOME/.composer/cache
 
 php:
   - '5.6'
