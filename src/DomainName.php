@@ -5,8 +5,6 @@ namespace MLocati\IDNA;
 use MLocati\IDNA\CodepointConverter\CodepointConverterInterface;
 use MLocati\IDNA\CodepointConverter\Utf8;
 use MLocati\IDNA\Exception\InvalidDomainNameCharacters;
-use MLocati\IDNA\Exception\InvalidPunycode;
-use MLocati\IDNA\Exception\InvalidString;
 
 class DomainName
 {
@@ -41,7 +39,7 @@ class DomainName
     /**
      * The converter to be used to convert characters to/from Unicode code points.
      *
-     * @var CodepointConverterInterface
+     * @var \MLocati\IDNA\CodepointConverter\CodepointConverterInterface
      */
     protected $codepointConverter;
 
@@ -49,7 +47,7 @@ class DomainName
      * Initializes the instance.
      *
      * @param int[] $codepoints
-     * @param CodepointConverterInterface $codepointConverter
+     * @param \MLocati\IDNA\CodepointConverter\CodepointConverterInterface|null $codepointConverter
      */
     protected function __construct(array $codepoints, CodepointConverterInterface $codepointConverter = null)
     {
@@ -76,10 +74,10 @@ class DomainName
      * Creates a new instance of the class starting from a string containing the domain name.
      *
      * @param string $name The domain name
-     * @param CodepointConverterInterface $codepointConverter The converter to handle the name (defaults to UTF-8)
+     * @param \MLocati\IDNA\CodepointConverter\CodepointConverterInterface|null $codepointConverter The converter to handle the name (defaults to UTF-8)
      *
-     * @throws InvalidString Throws an InvalidString exception if $name contains characters outside the encoding handled by $codepointConverter
-     * @throws InvalidDomainNameCharacters Throws an InvalidDomainNameCharacters if $name contains characters marked as Invalid by the IDNA Mapping table
+     * @throws \MLocati\IDNA\Exception\InvalidString Throws an InvalidString exception if $name contains characters outside the encoding handled by $codepointConverter
+     * @throws \MLocati\IDNA\Exception\InvalidDomainNameCharacters Throws an InvalidDomainNameCharacters if $name contains characters marked as Invalid by the IDNA Mapping table
      *
      * @return static
      */
@@ -96,10 +94,10 @@ class DomainName
      * Creates a new instance of the class starting from a string containing the domain punycode.
      *
      * @param string $punycode The punycode
-     * @param CodepointConverterInterface $codepointConverter The converter to handle the name (defaults to UTF-8)
+     * @param \MLocati\IDNA\CodepointConverter\CodepointConverterInterface|null $codepointConverter The converter to handle the name (defaults to UTF-8)
      *
-     * @throws InvalidPunycode Throws an InvalidPunycode exception if $punycode is not a valid
-     * @throws InvalidDomainNameCharacters Throws an InvalidDomainNameCharacters if the domain name corresponding th punycode contains characters marked as Invalid by the IDNA Mapping table
+     * @throws \MLocati\IDNA\Exception\InvalidPunycode Throws an InvalidPunycode exception if $punycode is not a valid
+     * @throws \MLocati\IDNA\Exception\InvalidDomainNameCharacters Throws an InvalidDomainNameCharacters if the domain name corresponding th punycode contains characters marked as Invalid by the IDNA Mapping table
      *
      * @return static
      */
@@ -204,7 +202,7 @@ class DomainName
      *
      * @param int[] $codepoints
      *
-     * @throws InvalidDomainNameCharacters
+     * @throws \MLocati\IDNA\Exception\InvalidDomainNameCharacters
      */
     protected function checkValid(array $codepoints)
     {
@@ -258,7 +256,7 @@ class DomainName
     /**
      * Get the default CodepointConverter.
      *
-     * @return CodepointConverterInterface
+     * @return \MLocati\IDNA\CodepointConverter\CodepointConverterInterface
      */
     protected static function getDefaultCodepointConverter()
     {

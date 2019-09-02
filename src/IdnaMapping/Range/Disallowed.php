@@ -13,9 +13,9 @@ class Disallowed extends Range
     /**
      * Initializes the instance.
      *
-     * @param TableRow $row
+     * @param \MLocati\IDNA\IdnaMapping\TableRow $row
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function __construct(TableRow $row)
     {
@@ -31,7 +31,7 @@ class Disallowed extends Range
     /**
      * {@inheritdoc}
      *
-     * @see Range::isCompatible()
+     * @see \MLocati\IDNA\IdnaMapping\Range\Range::isCompatibleWith()
      */
     protected function isCompatibleWith(Range $range)
     {

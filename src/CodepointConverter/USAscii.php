@@ -14,7 +14,7 @@ class USAscii extends CodepointConverter
     /**
      * {@inheritdoc}
      *
-     * @see CodepointConverter::getMinBytesPerCharacter()
+     * @see \MLocati\IDNA\CodepointConverter\CodepointConverter::getMinBytesPerCharacter()
      */
     protected function getMinBytesPerCharacter()
     {
@@ -24,7 +24,7 @@ class USAscii extends CodepointConverter
     /**
      * {@inheritdoc}
      *
-     * @see CodepointConverter::getMaxBytesPerCharacter()
+     * @see \MLocati\IDNA\CodepointConverter\CodepointConverter::getMaxBytesPerCharacter()
      */
     protected function getMaxBytesPerCharacter()
     {
@@ -34,7 +34,7 @@ class USAscii extends CodepointConverter
     /**
      * {@inheritdoc}
      *
-     * @see CodepointConverter::codepointToCharacterDo()
+     * @see \MLocati\IDNA\CodepointConverter\CodepointConverter::codepointToCharacterDo()
      */
     protected function codepointToCharacterDo($codepoint)
     {
@@ -48,7 +48,7 @@ class USAscii extends CodepointConverter
     /**
      * {@inheritdoc}
      *
-     * @see CodepointConverter::characterToCodepointDo()
+     * @see \MLocati\IDNA\CodepointConverter\CodepointConverter::characterToCodepointDo()
      */
     protected function characterToCodepointDo($character)
     {
@@ -69,7 +69,7 @@ class USAscii extends CodepointConverter
     /**
      * {@inheritdoc}
      *
-     * @see CodepointConverter::stringToCharacters()
+     * @see \MLocati\IDNA\CodepointConverter\CodepointConverter::stringToCharacters()
      */
     public function stringToCharacters($string)
     {
