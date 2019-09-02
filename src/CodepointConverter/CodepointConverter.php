@@ -14,7 +14,7 @@ abstract class CodepointConverter implements CodepointConverterInterface
     /**
      * {@inheritdoc}
      *
-     * @see CodepointConverterInterface::isCodepointValid()
+     * @see \MLocati\IDNA\CodepointConverter\CodepointConverterInterface::isCodepointValid()
      */
     public function isCodepointValid($codepoint)
     {
@@ -24,7 +24,7 @@ abstract class CodepointConverter implements CodepointConverterInterface
     /**
      * {@inheritdoc}
      *
-     * @see CodepointConverterInterface::characterToCodepoint()
+     * @see \MLocati\IDNA\CodepointConverter\CodepointConverterInterface::characterToCodepoint()
      */
     public function characterToCodepoint($character)
     {
@@ -44,7 +44,7 @@ abstract class CodepointConverter implements CodepointConverterInterface
     /**
      * {@inheritdoc}
      *
-     * @see CodepointConverterInterface::charactersToCodepoints()
+     * @see \MLocati\IDNA\CodepointConverter\CodepointConverterInterface::charactersToCodepoints()
      */
     public function charactersToCodepoints(array $characters)
     {
@@ -59,7 +59,7 @@ abstract class CodepointConverter implements CodepointConverterInterface
     /**
      * {@inheritdoc}
      *
-     * @see CodepointConverterInterface::charactersToString()
+     * @see \MLocati\IDNA\CodepointConverter\CodepointConverterInterface::charactersToString()
      */
     public function charactersToString(array $characters)
     {
@@ -69,11 +69,10 @@ abstract class CodepointConverter implements CodepointConverterInterface
     /**
      * {@inheritdoc}
      *
-     * @see CodepointConverterInterface::codepointToCharacter()
+     * @see \MLocati\IDNA\CodepointConverter\CodepointConverterInterface::codepointToCharacter()
      */
     public function codepointToCharacter($codepoint)
     {
-        $result = null;
         $int = $this->parseCodepoint($codepoint);
         if ($int === null) {
             throw new InvalidCodepoint($codepoint);
@@ -85,7 +84,7 @@ abstract class CodepointConverter implements CodepointConverterInterface
     /**
      * {@inheritdoc}
      *
-     * @see CodepointConverterInterface::codepointsToCharacters()
+     * @see \MLocati\IDNA\CodepointConverter\CodepointConverterInterface::codepointsToCharacters()
      */
     public function codepointsToCharacters(array $codepoints)
     {
@@ -100,7 +99,7 @@ abstract class CodepointConverter implements CodepointConverterInterface
     /**
      * {@inheritdoc}
      *
-     * @see CodepointConverterInterface::codepointsToString()
+     * @see \MLocati\IDNA\CodepointConverter\CodepointConverterInterface::codepointsToString()
      */
     public function codepointsToString(array $codepoints)
     {
@@ -115,7 +114,7 @@ abstract class CodepointConverter implements CodepointConverterInterface
     /**
      * {@inheritdoc}
      *
-     * @see CodepointConverterInterface::stringToCharacters()
+     * @see \MLocati\IDNA\CodepointConverter\CodepointConverterInterface::stringToCharacters()
      *
      * @virtual
      */
@@ -153,7 +152,7 @@ abstract class CodepointConverter implements CodepointConverterInterface
     /**
      * {@inheritdoc}
      *
-     * @see CodepointConverterInterface::stringToCodepoints()
+     * @see \MLocati\IDNA\CodepointConverter\CodepointConverterInterface::stringToCodepoints()
      */
     public function stringToCodepoints($string)
     {
@@ -222,9 +221,9 @@ abstract class CodepointConverter implements CodepointConverterInterface
      *
      * @param int $codepoint Non-negative integer
      *
-     * @return string
+     * @throws \MLocati\IDNA\Exception\InvalidCodepoint
      *
-     * @throws InvalidCodepoint
+     * @return string
      */
     abstract protected function codepointToCharacterDo($codepoint);
 
@@ -233,9 +232,9 @@ abstract class CodepointConverter implements CodepointConverterInterface
      *
      * @param string $character Non-empty string
      *
-     * @return int
+     * @throws \MLocati\IDNA\Exception\InvalidCharacter
      *
-     * @throws InvalidCharacter
+     * @return int
      */
     abstract protected function characterToCodepointDo($character);
 }

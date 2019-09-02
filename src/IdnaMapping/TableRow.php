@@ -66,9 +66,9 @@ class TableRow
      *
      * @param string $line
      *
-     * @return static|null
+     * @throws \Exception
      *
-     * @throws Exception
+     * @return static|null
      */
     public static function parse($line)
     {
@@ -81,6 +81,7 @@ class TableRow
             if ($comment === '') {
                 throw new Exception('Missing comment');
             }
+            $matches = null;
             if (strpos($comment, 'NA ') === 0) {
                 $result->comment = ltrim(substr($comment, 3));
             } elseif (preg_match('/^(\d+(?:\.\d+)*) /', $comment, $matches)) {
@@ -124,7 +125,7 @@ class TableRow
      * @param bool $mustBeSorted
      * @param int|null $maxCount
      *
-     * @throws Exception
+     * @throws \Exception
      *
      * @return int[]
      */

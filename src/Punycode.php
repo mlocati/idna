@@ -115,7 +115,7 @@ class Punycode
      *
      * @param int[] $codepoints
      *
-     * @throws InvalidCodepoint
+     * @throws \MLocati\IDNA\Exception\InvalidCodepoint
      *
      * @return string
      */
@@ -147,7 +147,7 @@ class Punycode
      *
      * @param string $punycode
      *
-     * @throws InvalidPunycode
+     * @throws \MLocati\IDNA\Exception\InvalidPunycode
      *
      * @return int[]
      */
@@ -259,7 +259,7 @@ class Punycode
      *
      * @param string $label
      *
-     * @throws InvalidPunycode
+     * @throws \MLocati\IDNA\Exception\InvalidPunycode
      *
      * @return int[]
      */
@@ -292,7 +292,6 @@ class Punycode
             }
             // $b: the position after the last delimiter, or 0 if there is none
             // Initialize the state
-            $dictionary = self::DICTIONARY;
             $n = self::BOOTSTRING_INITIAL_N;
             $bias = self::BOOTSTRING_INITIAL_BIAS;
             $i = 0;

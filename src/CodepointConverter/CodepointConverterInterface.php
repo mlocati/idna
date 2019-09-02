@@ -2,10 +2,6 @@
 
 namespace MLocati\IDNA\CodepointConverter;
 
-use MLocati\IDNA\Exception\InvalidCharacter;
-use MLocati\IDNA\Exception\InvalidCodepoint;
-use MLocati\IDNA\Exception\InvalidString;
-
 /**
  * Convert an Unicode Code Point to/from an character.
  */
@@ -39,9 +35,9 @@ interface CodepointConverterInterface
      *
      * @param string $character
      *
-     * @return int
+     * @throws \MLocati\IDNA\Exception\InvalidCharacter
      *
-     * @throws InvalidCharacter
+     * @return int
      */
     public function characterToCodepoint($character);
 
@@ -50,9 +46,9 @@ interface CodepointConverterInterface
      *
      * @param string[] $characters
      *
-     * @return int[]
+     * @throws \MLocati\IDNA\Exception\InvalidCharacter
      *
-     * @throws InvalidCharacter
+     * @return int[]
      */
     public function charactersToCodepoints(array $characters);
 
@@ -70,9 +66,9 @@ interface CodepointConverterInterface
      *
      * @param int|mixed $codepoint
      *
-     * @return string
+     * @throws \MLocati\IDNA\Exception\InvalidCodepoint
      *
-     * @throws InvalidCodepoint
+     * @return string
      */
     public function codepointToCharacter($codepoint);
 
@@ -81,9 +77,9 @@ interface CodepointConverterInterface
      *
      * @param int[] $codepoints
      *
-     * @return string[]
+     * @throws \MLocati\IDNA\Exception\InvalidCodepoint
      *
-     * @throws InvalidCodepoint
+     * @return string[]
      */
     public function codepointsToCharacters(array $codepoints);
 
@@ -92,9 +88,9 @@ interface CodepointConverterInterface
      *
      * @param int[] $codepoints
      *
-     * @return string
+     * @throws \MLocati\IDNA\Exception\InvalidCodepoint
      *
-     * @throws InvalidCodepoint
+     * @return string
      */
     public function codepointsToString(array $codepoints);
 
@@ -103,9 +99,9 @@ interface CodepointConverterInterface
      *
      * @param string $string
      *
-     * @return string[]
+     * @throws \MLocati\IDNA\Exception\InvalidString
      *
-     * @throws InvalidString
+     * @return string[]
      */
     public function stringToCharacters($string);
 
@@ -114,9 +110,9 @@ interface CodepointConverterInterface
      *
      * @param string $string
      *
-     * @return int[]
+     * @throws \MLocati\IDNA\Exception\InvalidString
      *
-     * @throws InvalidString
+     * @return int[]
      */
     public function stringToCodepoints($string);
 }

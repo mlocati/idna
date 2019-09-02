@@ -31,7 +31,7 @@ abstract class Range
     /**
      * Initializes the instance.
      *
-     * @param TableRow $row The row read from the IDNA Mapping table
+     * @param \MLocati\IDNA\IdnaMapping\TableRow $row The row read from the IDNA Mapping table
      */
     protected function __construct(TableRow $row)
     {
@@ -45,9 +45,9 @@ abstract class Range
      *
      * @param string $line
      *
-     * @return static|null
+     * @throws \Exception
      *
-     * @throws Exception
+     * @return static|null
      */
     public static function fromIdnaMappingTableLine($line)
     {
@@ -120,7 +120,7 @@ abstract class Range
     /**
      * Check if another instance has data compatible with this instance.
      *
-     * @param Range $with
+     * @param \MLocati\IDNA\IdnaMapping\Range\Range $range
      *
      * @return bool
      */
@@ -129,7 +129,7 @@ abstract class Range
     /**
      * Merge this range with another one, if they are contiguous and are compatible.
      *
-     * @param Range $range
+     * @param \MLocati\IDNA\IdnaMapping\Range\Range $range
      *
      * @return false
      */

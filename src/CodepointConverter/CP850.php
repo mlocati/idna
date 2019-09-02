@@ -149,7 +149,7 @@ class CP850 extends CodepointConverter
     /**
      * {@inheritdoc}
      *
-     * @see CodepointConverter::getMinBytesPerCharacter()
+     * @see \MLocati\IDNA\CodepointConverter\CodepointConverter::getMinBytesPerCharacter()
      */
     protected function getMinBytesPerCharacter()
     {
@@ -159,7 +159,7 @@ class CP850 extends CodepointConverter
     /**
      * {@inheritdoc}
      *
-     * @see CodepointConverter::getMaxBytesPerCharacter()
+     * @see \MLocati\IDNA\CodepointConverter\CodepointConverter::getMaxBytesPerCharacter()
      */
     protected function getMaxBytesPerCharacter()
     {
@@ -169,7 +169,7 @@ class CP850 extends CodepointConverter
     /**
      * {@inheritdoc}
      *
-     * @see CodepointConverter::codepointToCharacterDo()
+     * @see \MLocati\IDNA\CodepointConverter\CodepointConverter::codepointToCharacterDo()
      */
     protected function codepointToCharacterDo($codepoint)
     {
@@ -193,7 +193,7 @@ class CP850 extends CodepointConverter
     /**
      * {@inheritdoc}
      *
-     * @see CodepointConverter::characterToCodepointDo()
+     * @see \MLocati\IDNA\CodepointConverter\CodepointConverter::characterToCodepointDo()
      */
     protected function characterToCodepointDo($character)
     {
@@ -216,7 +216,7 @@ class CP850 extends CodepointConverter
     /**
      * {@inheritdoc}
      *
-     * @see CodepointConverter::stringToCharacters()
+     * @see \MLocati\IDNA\CodepointConverter\CodepointConverter::stringToCharacters()
      */
     public function stringToCharacters($string)
     {

@@ -27,10 +27,10 @@ class Mapped extends Range
     /**
      * Initializes the instance.
      *
-     * @param TableRow $row
+     * @param \MLocati\IDNA\IdnaMapping\TableRow $row
      * @param bool $disallowedSTD3
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function __construct(TableRow $row, $disallowedSTD3)
     {
@@ -48,7 +48,7 @@ class Mapped extends Range
     /**
      * {@inheritdoc}
      *
-     * @see Range::isCompatible()
+     * @see \MLocati\IDNA\IdnaMapping\Range\Range::isCompatibleWith()
      */
     protected function isCompatibleWith(Range $range)
     {

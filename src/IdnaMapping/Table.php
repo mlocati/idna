@@ -4,7 +4,6 @@ namespace MLocati\IDNA\IdnaMapping;
 
 use Exception;
 use MLocati\IDNA\Exception\InvalidParameter;
-use MLocati\IDNA\IdnaMap;
 use MLocati\IDNA\IdnaMapping\Range\Deviation;
 use MLocati\IDNA\IdnaMapping\Range\Disallowed;
 use MLocati\IDNA\IdnaMapping\Range\Ignored;
@@ -29,14 +28,14 @@ class Table
     public $date;
 
     /**
-     * @var Range[]
+     * @var \MLocati\IDNA\IdnaMapping\Range\Range[]
      */
     public $ranges;
 
     /**
      * @param string $text
      *
-     * @throws MLocati\IDNA\Exception\Exception
+     * @throws \MLocati\IDNA\Exception\Exception
      */
     protected function __construct($text)
     {
@@ -45,7 +44,6 @@ class Table
 
     /**
      * @param array $options {
-     *
      *     @var string $namespace The class namespace [default: 'MLocati\IDNA']
      *     @var string $className The class name [default: 'IdnaMap']
      *     @var bool $comments Include comments? [default: false]
@@ -375,9 +373,9 @@ class Table
     /**
      * @param string $path
      *
-     * @return static
+     * @throws \MLocati\IDNA\Exception\Exception
      *
-     * @throws MLocati\IDNA\Exception\Exception
+     * @return static
      */
     public static function load($path)
     {
@@ -404,9 +402,9 @@ class Table
     /**
      * @param string $text
      *
-     * @return static
+     * @throws \MLocati\IDNA\Exception\Exception
      *
-     * @throws MLocati\IDNA\Exception\Exception
+     * @return static
      */
     public static function parse($text)
     {
@@ -416,7 +414,7 @@ class Table
     /**
      * @param string $text
      *
-     * @throws MLocati\IDNA\Exception\Exception
+     * @throws \MLocati\IDNA\Exception\Exception
      */
     protected function parseText($text)
     {
@@ -428,6 +426,7 @@ class Table
             throw new InvalidParameter(__METHOD__, '$text', 'Empty text');
         }
         $lines = preg_split('/\r\n|\n|\r/m', $text);
+        $matches = null;
         foreach ($lines as $lineIndex => $line) {
             try {
                 $range = Range::fromIdnaMappingTableLine($line);
