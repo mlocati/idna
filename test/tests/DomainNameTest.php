@@ -5,7 +5,7 @@ namespace MLocati\IDNA\Tests;
 use Exception;
 use MLocati\IDNA\CodepointConverter\Utf8;
 use MLocati\IDNA\DomainName;
-use PHPUnit\Framework\TestCase;
+use MLocati\IDNA\Test\TestCase;
 
 class DomainNameTest extends TestCase
 {
@@ -14,12 +14,12 @@ class DomainNameTest extends TestCase
      */
     protected static $codepointConverter;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClassBase()
     {
         static::$codepointConverter = new Utf8();
     }
 
-    public function domainNameProvider()
+    public static function domainNameProvider()
     {
         return array(
             array('GitHub.com', 'github.com', 'github.com'),
@@ -53,7 +53,7 @@ class DomainNameTest extends TestCase
         $this->assertSame($deviatedPunycode, $domainName->getDeviatedPunycode());
     }
 
-    public function invalidDomainsProvider()
+    public static function invalidDomainsProvider()
     {
         return array(
             array('email@example.com', 'MLocati\IDNA\Exception\InvalidDomainNameCharacters', 'The domain name contains an invalid character: @'),
