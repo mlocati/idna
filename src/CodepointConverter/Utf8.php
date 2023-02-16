@@ -129,7 +129,7 @@ class Utf8 extends CodepointConverter
         } else {
             $result = null;
             if (function_exists('preg_split')) {
-                $characters = @preg_split('//u', (string) $string, null, PREG_SPLIT_NO_EMPTY);
+                $characters = @preg_split('//u', (string) $string, -1, PREG_SPLIT_NO_EMPTY);
                 if (is_array($characters) && implode('', $characters) === $string) {
                     for ($i = 0, $n = count($characters), $ok = true; $ok && $i < $n; ++$i) {
                         $character = $characters[$i];
