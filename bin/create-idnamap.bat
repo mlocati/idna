@@ -1,1 +1,1 @@
-@php "%~dp0create-idnamap.php" %*
+@php "%~dpn0" %*
