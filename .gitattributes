@@ -1,6 +1,8 @@
 /bin/ export-ignore
 /src/IdnaMapping export-ignore
 /test/ export-ignore
+/test/assets/punycode.bin text eol=lf
+/test/assets/utf8-symbols.bin text eol=lf
 /.* export-ignore
 /*.yml export-ignore
 /*.xml export-ignore

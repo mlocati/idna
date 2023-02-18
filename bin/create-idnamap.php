@@ -2,6 +2,10 @@
 
 use MLocati\IDNA\IdnaMapping\Table;
 
+/**
+ * @var string[] $argv
+ */
+
 $defaultSavePath = implode(DIRECTORY_SEPARATOR, array(dirname(__DIR__), 'src', 'IdnaMap.php'));
 
 $arguments = array();

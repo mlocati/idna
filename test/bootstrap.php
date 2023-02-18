@@ -2,14 +2,8 @@
 
 require_once dirname(__DIR__).'/autoload.php';
 
-spl_autoload_register(
-    function ($class) {
-        if (strpos($class, 'MLocati\\IDNA\\Tests') !== 0) {
-            return;
-        }
-        $file = __DIR__.DIRECTORY_SEPARATOR.'tests'.str_replace('\\', DIRECTORY_SEPARATOR, substr($class, strlen('MLocati\\IDNA\\Tests'))).'.php';
-        if (is_file($file)) {
-            require_once $file;
-        }
-    }
-);
+if (class_exists('PHPUnit\Runner\Version') && version_compare(PHPUnit\Runner\Version::id(), '8') >= 0) {
+    class_alias('MLocati\IDNA\Test\TestCase_v8', 'MLocati\IDNA\Test\TestCase');
+} else {
+    class_alias('MLocati\IDNA\Test\TestCase_v4', 'MLocati\IDNA\Test\TestCase');
+}

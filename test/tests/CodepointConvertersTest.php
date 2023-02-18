@@ -3,11 +3,11 @@
 namespace MLocati\IDNA\Tests;
 
 use MLocati\IDNA\CodepointConverter\Utf8;
-use PHPUnit\Framework\TestCase;
+use MLocati\IDNA\Test\TestCase;
 
 class CodepointConvertersTest extends TestCase
 {
-    public function specificCodepointsProvider()
+    public static function specificCodepointsProvider()
     {
         $result = array(
             array(0x0000, "\0"),

@@ -1,6 +1,7 @@
-[![Build Status](https://travis-ci.org/mlocati/idna.svg?branch=master)](https://travis-ci.org/mlocati/idna)
+[![Tests](https://github.com/mlocati/idna/actions/workflows/tests.yml/badge.svg)](https://github.com/mlocati/idna/actions/workflows/tests.yml)
 
 # International Domain Names PHP library
+
 
 ## Introduction & terminology
 
@@ -9,6 +10,7 @@ Historically, we've been able to use domain names composed only by [ASCII charac
 A new technique, called **Internationalized Domain Names** (***IDN*** for short), allows you to use most of the [Unicode characters](https://en.wikipedia.org/wiki/Universal_Character_Set_characters), so that you can have for instance `www.例.中国`.
 
 To grant compatibility with all the existing software that makes internet work, domain names containing non-ASCII characters are represented in **Punycode**, a special format that uses ASCII-only characters.
+
 
 ## Mapping
 
@@ -35,6 +37,7 @@ For instance, IDNA2003 required that `ß` mapped to `ss`, whereas IDNA2008 allow
 
 Since the resulting Punycode is different (it's called ***deviation***), this lead to big security issues, and you *need* to know that a domain name is deviated.
 
+
 ## Advantages of this library
 
 - no dependencies from any PHP extension
@@ -42,7 +45,8 @@ Since the resulting Punycode is different (it's called ***deviation***), this le
 - consistency across different PHP versions
 - results are granted to follow the standards (it's not just a bare *multibyte to punycode* conversion library)
 - designed with speed in mind
-- compatible with PHP 5.3
+- compatible with any PHP version ranging from PHP 5.3 to the most recent PHP versions (8.2 at the time of writing this)
+
 
 ## Sample usage
 

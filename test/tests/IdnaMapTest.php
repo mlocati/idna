@@ -4,13 +4,13 @@ namespace MLocati\IDNA\Tests;
 
 use MLocati\IDNA\CodepointConverter\CodepointConverterInterface;
 use MLocati\IDNA\IdnaMap;
-use PHPUnit\Framework\TestCase;
+use MLocati\IDNA\Test\TestCase;
 
 class IdnaMapTest extends TestCase
 {
     protected static $idnaMapError = 'Not initialized';
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClassBase()
     {
         if (!class_exists('MLocati\IDNA\IdnaMap', true)) {
             static::$idnaMapError = 'The IdnaMap can\'t be found (you may need to create it with the create-idnamap command)';
@@ -21,7 +21,7 @@ class IdnaMapTest extends TestCase
         }
     }
 
-    public function allCodepointsAreCoveredProvider()
+    public static function allCodepointsAreCoveredProvider()
     {
         $data = array();
         if (static::$idnaMapError !== null) {

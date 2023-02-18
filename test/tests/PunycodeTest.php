@@ -5,7 +5,7 @@ namespace MLocati\IDNA\Tests;
 use MLocati\IDNA\CodepointConverter\CodepointConverterInterface;
 use MLocati\IDNA\CodepointConverter\Utf8;
 use MLocati\IDNA\Punycode;
-use PHPUnit\Framework\TestCase;
+use MLocati\IDNA\Test\TestCase;
 use Exception;
 
 class PunycodeTest extends TestCase
@@ -15,12 +15,12 @@ class PunycodeTest extends TestCase
      */
     protected static $codepointConverter;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClassBase()
     {
         static::$codepointConverter = new Utf8();
     }
 
-    public function punycodeProvider()
+    public static function punycodeProvider()
     {
         $result = array();
         $data = @file_get_contents(dirname(__DIR__).'/assets/punycode.bin');
@@ -64,7 +64,7 @@ class PunycodeTest extends TestCase
         );
     }
 
-    public function invalidPunycodeProvider()
+    public static function invalidPunycodeProvider()
     {
         return array(
             array(''),
