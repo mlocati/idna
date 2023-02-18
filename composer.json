@@ -69,5 +69,8 @@
     },
     "scripts": {
         "test": "phpunit"
-    }
+    },
+    "bin": [
+        "bin/create-idnamap"
+    ]
 }
