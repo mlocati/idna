@@ -71,3 +71,8 @@ Deviated: yes
 Deviated Name: www.schloss.com
 Deviated Punycode: www.schloss.com
 ```
+
+
+## Do you really want to say thank you?
+
+You can offer me a [monthly coffee](https://github.com/sponsors/mlocati) or a [one-time coffee](https://paypal.me/mlocati) :wink:
