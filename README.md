@@ -51,9 +51,6 @@ Since the resulting Punycode is different (it's called ***deviation***), this le
 ## Sample usage
 
 ```php
-
-use MLocati\IDNA\DomainName;
-
 require_once 'autoload.php'; // Not required if you use composer
 
 $domain = \MLocati\IDNA\DomainName::fromName('www。schloß.COM');
@@ -64,7 +61,9 @@ echo "Deviated: ", $domain->isDeviated() ? 'yes' : 'no', "\n";
 echo "Deviated Name: ", $domain->getDeviatedName(), "\n";
 echo "Deviated Punycode: ", $domain->getDeviatedPunycode(), "\n";
 ```
+
 output:
+
 ```
 Name: www.schloß.com
 Punycode: www.xn--schlo-pqa.com
