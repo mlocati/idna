@@ -36,10 +36,10 @@ if (empty($arguments) || count(array_intersect($options, array('-h', '--help', '
 This command is useful to parse the Unicode IDNA Mapping Table and create a PHP class from it.
 We could parse this file on the fly at each run, but it would be really slow.
 
-You can find the IDNA Mapping Table http://www.unicode.org/Public/idna/
-The latest version is usually located at http://www.unicode.org/Public/idna/latest/IdnaMappingTable.txt
+You can find the IDNA Mapping Table https://www.unicode.org/Public/idna/
+The latest version is usually located at https://www.unicode.org/Public/idna/latest/IdnaMappingTable.txt
 
-Syntax: $myName --debug <input-file> [<output-file>]\n";
+Syntax: {$myName} [--debug] <input-file> [<output-file>]
 - --debug: create the class with comments and superfluous code
 - <input-file>: a local copy of the IDNA Mapping Table file (or its URL if your PHP installation supports it).
 - <output-file>: where to save the generated PHP code. If not specified we'll output it to STDOUT.

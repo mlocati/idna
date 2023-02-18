@@ -25,7 +25,7 @@ By the way, even `mb_strtolower` isn't a good choice, for these reasons:
 2. the `mb_strtolower` behaviour changes across different PHP versions (for instance, `Ԩ` is correctly converted to `ԩ` for PHP 7.0, but prior versions kept `Ԩ`)
 3. `mb_strtolower` does not translate a lot of Unicode characters that are suggested by the standards
 
-Unicode offers a [mapping table](http://www.unicode.org/Public/idna/latest/IdnaMappingTable.txt) with the recommended mapping (for instance, case normalization like `A` to `a`, but also `。` to `.`).
+Unicode offers a [mapping table](https://www.unicode.org/Public/idna/latest/IdnaMappingTable.txt) with the recommended mapping (for instance, case normalization like `A` to `a`, but also `。` to `.`).
 
 
 ## Deviation
