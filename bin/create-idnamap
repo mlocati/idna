@@ -5,6 +5,7 @@ use MLocati\IDNA\IdnaMapping\Table;
 
 /**
  * @var string[] $argv
+ * @var string $_composer_autoload_path when this script is launched by Composer 2.2+
  */
 
 $defaultSavePath = implode(DIRECTORY_SEPARATOR, array(dirname(__DIR__), 'src', 'IdnaMap.php'));
@@ -66,8 +67,9 @@ foreach ($options as $option) {
 }
 
 try {
-    require_once dirname(__DIR__).'/autoload.php';
-
+    if (!class_exists('MLocati\IDNA\IdnaMapping\Table')) {
+        require_once isset($_composer_autoload_path) ? $_composer_autoload_path : dirname(__DIR__).'/autoload.php';
+    }
     $filename = isset($arguments[1]) ? $arguments[1] : '';
     if ($filename === '-') {
         $filename = $defaultSavePath;
