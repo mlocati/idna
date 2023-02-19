@@ -1,4 +1,3 @@
-/bin/ export-ignore
 /src/IdnaMapping export-ignore
 /test/ export-ignore
 /test/assets/punycode.bin text eol=lf
