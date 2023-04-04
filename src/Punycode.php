@@ -237,7 +237,7 @@ class Punycode
                             }
                             $code = $t + (($q - $t) % (self::BOOTSTRING_BASE - $t));
                             $result .= $dictionary[$code];
-                            $q = ($q - $t) / (self::BOOTSTRING_BASE - $t);
+                            $q = intval(($q - $t) / (self::BOOTSTRING_BASE - $t));
                         }
                         $result .= $dictionary[(int) $q];
                         $bias = self::adapt($delta, $h + 1, ($h === $numBasicCodepoints));
