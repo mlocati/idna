@@ -239,7 +239,7 @@ class Punycode
                             $result .= $dictionary[$code];
                             if (version_compare(PHP_VERSION, '7.0') >= 0) {
                                 /** @noinspection PhpElementIsNotAvailableInCurrentPhpVersionInspection */
-                                // This prevents warning 'Deprecated: Implicit conversion from float 10.457142857142857 to int loses precision'
+                                // This prevents warning 'Deprecated: Implicit conversion from float
                                 $q = intdiv(($q - $t), (self::BOOTSTRING_BASE - $t));
                             } else {
                                 $q = ($q - $t) / (self::BOOTSTRING_BASE - $t);
