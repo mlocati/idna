@@ -9,69 +9,127 @@ on:
       - main
 
 jobs:
+  check-php-syntax:
+    name: Check PHP ${{ matrix.php-version }} Syntax
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-version:
+          - 7.1
+          - 8.4
+    steps:
+      -
+        name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          tools: none
+          coverage: none
+          extensions: opcache
+      -
+        name: Checkout
+        uses: actions/checkout@v4
+      -
+        name: Check syntax
+        uses: mlocati/check-php-syntax@v1
+        with:
+          directory: src
+          include: |
+            ../bin/create-idnamap
+          fail-on-warnings: true
   phpunit:
-    name: PHPUnit
+    name: PHPUnit (PHP ${{ matrix.php-version }}, ${{ matrix.os }})
+    needs:
+      - check-php-syntax
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         include:
-          - os: ubuntu-latest
+          -
+            os: ubuntu-latest
             php-version: "5.3"
             phpunit-flags: "--configuration phpunit-4.xml"
-          - os: ubuntu-latest
+          -
+            os: ubuntu-latest
             php-version: "5.4"
             phpunit-flags: "--configuration phpunit-4.xml"
-          - os: ubuntu-latest
+          -
+            os: ubuntu-latest
             php-version: "5.5"
             phpunit-flags: "--configuration phpunit-4.xml"
-          - os: ubuntu-latest
+          -
+            os: ubuntu-latest
             php-version: "5.6"
             phpunit-flags: "--configuration phpunit-4.xml"
-          - os: windows-latest
+          -
+            os: windows-latest
             php-version: "5.6"
             phpunit-flags: "--configuration phpunit-4.xml"
-          - os: ubuntu-latest
+          -
+            os: ubuntu-latest
             php-version: "7.0"
             phpunit-flags: "--configuration phpunit-4.xml"
-          - os: ubuntu-latest
+          -
+            os: ubuntu-latest
             php-version: "7.1"
             phpunit-flags: "--configuration phpunit-4.xml"
-          - os: ubuntu-latest
+          -
+            os: ubuntu-latest
             php-version: "7.2"
             phpunit-flags: "--configuration phpunit-4.xml"
-          - os: ubuntu-latest
+          -
+            os: ubuntu-latest
             php-version: "7.3"
             phpunit-flags: "--configuration phpunit-4.xml"
-          - os: ubuntu-latest
+          -
+            os: ubuntu-latest
             php-version: "7.4"
             phpunit-flags: "--configuration phpunit-4.xml"
-          - os: windows-latest
+          -
+            os: windows-latest
             php-version: "7.4"
             phpunit-flags: "--configuration phpunit-4.xml"
-          - os: ubuntu-latest
+          -
+            os: ubuntu-latest
             php-version: "8.0"
             phpunit-flags: "--configuration phpunit-4.xml"
-          - os: ubuntu-latest
+          -
+            os: ubuntu-latest
             php-version: "8.1"
             phpunit-flags: "--configuration phpunit-10.xml"
-          - os: ubuntu-latest
+          -
+            os: ubuntu-latest
             php-version: "8.2"
             phpunit-flags: "--configuration phpunit-10.xml"
-          - os: windows-latest
-            php-version: "8.2"
+          -
+            os: ubuntu-latest
+            php-version: "8.3"
             phpunit-flags: "--configuration phpunit-10.xml"
-    runs-on: ${{ matrix.os }}
+          -
+            os: ubuntu-latest
+            php-version: "8.4"
+            phpunit-flags: "--configuration phpunit-10.xml"
+          -
+            os: windows-latest
+            php-version: "8.4"
+            phpunit-flags: "--configuration phpunit-10.xml"
     steps:
-      - name: Setup PHP
+      -
+        name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-version }}
           tools: composer
           coverage: none
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Install Composer dependencies
+      -
+        name: Checkout
+        uses: actions/checkout@v4
+      -
+        name: Install Composer dependencies
         run: composer --ansi --no-interaction --no-progress --optimize-autoloader update
-      - name: Create debug file
+      -
+        name: Create debug file
         run: php ./bin/create-idnamap --debug test/assets/IdnaMappingTable.txt -
-      - name: Run PHPUnit
+      -
+        name: Run PHPUnit
         run: composer --ansi --no-interaction run-script test -- ${{ matrix.phpunit-flags }}
